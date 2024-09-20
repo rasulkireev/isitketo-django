@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class FoodCategory(StrEnum):
     BEVERAGES = "Beverages"
     FRUITS = "Fruits"

@@ -50,4 +50,3 @@ Most brands of soy-based and coconut-based liquid aminos have 1 g or less of net
 One advantage coconut aminos have over soy-based aminos is their lower sodium content. Soy-based liquid aminos contain roughly the same amount of sodium as soy sauce &mdash; around 1,000 mg per tablespoon. Given that the [CDC recommends](https://www.cdc.gov/salt/pdfs/sodium_dietary_guidelines.pdf) that adults eat no more than 2,300 mg of sodium per day, each tablespoon eats a huge chunk out of your daily limits.
 
 Coconut aminos have ~70% less sodium per serving. If you're concerned about your sodium intake, coconut aminos might be a nice compromise between carbs and sodium.
-

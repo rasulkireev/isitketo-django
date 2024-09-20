@@ -12,10 +12,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+
 import environ
 import structlog
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +33,7 @@ ENVIRONMENT = env("ENVIRONMENT")
 SECRET_KEY = "django-insecure-a7&5bd(i0z*e!2o1up_!jhdxqxe(%ygs)7i+vc*$4o+9zogu%3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -147,12 +146,12 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-          "bucket_name": bucket_name,
-          "default_acl": "public-read",
-          "region_name": "eu-east-1",
-          "endpoint_url": env("AWS_S3_ENDPOINT_URL"),
-          "access_key": env("AWS_ACCESS_KEY_ID"),
-          "secret_key": env("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": bucket_name,
+            "default_acl": "public-read",
+            "region_name": "eu-east-1",
+            "endpoint_url": env("AWS_S3_ENDPOINT_URL"),
+            "access_key": env("AWS_ACCESS_KEY_ID"),
+            "secret_key": env("AWS_SECRET_ACCESS_KEY"),
         },
     },
     "staticfiles": {
