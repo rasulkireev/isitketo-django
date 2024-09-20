@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container px-4 py-8 mx-auto">
+    <h1 class="mb-8 text-3xl font-bold text-center">All Products</h1>
+
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% for product in products %}
+            {% include "components/product_card.html" with product=product %}
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="flex justify-center mt-8">
+        <nav class="inline-flex rounded-md shadow">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-l-md border border-gray-300 hover:bg-gray-50">
+                    Previous
+                </a>
+            {% endif %}
+
+            <span class="
+              px-3 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300
+              {% if not page_obj.has_previous %}rounded-l-md border-l{% endif %}
+              {% if not page_obj.has_next %}rounded-r-md border-r{% endif %}
+            ">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a
+                  href="?page={{ page_obj.next_page_number }}"
+                  class="px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-r-md border border-gray-300 hover:bg-gray-50"
+                >
+                    Next
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

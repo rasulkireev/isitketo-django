@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "is_it_keto.settings")  # noqa: E501
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "isitketo.settings")  # noqa: E501
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

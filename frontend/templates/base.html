@@ -1,4 +1,6 @@
 {% load webpack_loader static %}
+{% load string_extras %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,49 +44,62 @@
 
 <body>
   <div data-controller="dropdown" class="bg-white">
-    <header class="bg-white">
-      <nav class="flex justify-between items-center p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
-        <div class="flex gap-x-12 items-center">
+    <header class="bg-yellow-50">
+      <nav class="container flex justify-between items-center px-4 py-8 mx-auto" aria-label="Global">
+        <div class="flex items-center">
           <a href="{% url 'home' %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
-            <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" alt="Is it Keto Logo" />
-            <span class="text-base font-semibold text-gray-700">Is it Keto</span>
+            <img class="w-auto h-16" src="{% static 'vendors/images/logo.png' %}" alt="Is it Keto Logo" />
           </a>
         </div>
-        <div class="flex lg:hidden">
-          <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
-            class="inline-flex justify-center items-center p-2.5 -m-2.5 text-gray-700 rounded-md">
-            <span class="sr-only">Open main menu</span>
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </button>
-        </div>
-        <div class="hidden items-center lg:flex lg:gap-x-12">
-          {% if user.is_authenticated %}
-          <!-- Profile dropdown -->
-          <div data-controller="dropdown" class="relative ml-3">
-            <div>
-              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide"
-                class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                <span class="sr-only">Open user menu</span>
-                <img class="object-cover p-1 w-10 h-10 bg-gray-100 rounded-full border-2 border-gray-500"
-                  src="{% static 'vendors/images/unknown-man.png' %}" alt="No Personal Photo" />
-              </button>
-            </div>
-            <div data-dropdown-target="menu"
-              class="absolute right-0 z-10 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
-              role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-                role="menuitem" data-action="dropdown#toggle" tabindex="-1" id="user-menu-item-2">Sign out</a>
+
+        <div class="hidden flex-grow justify-center lg:flex lg:space-x-8">
+          <a href="{% url 'home' %}" class="font-semibold leading-6 text-gray-900 hover:text-gray-600">Home</a>
+          <a href="{% url 'products' %}" class="font-semibold leading-6 text-gray-900 hover:text-gray-600">Products</a>
+          <div class="relative">
+            <button type="button" class="flex gap-x-1 items-center font-semibold leading-6 text-gray-900 hover:text-gray-600" aria-expanded="false" data-action="dropdown#toggle click@window->dropdown#hide">
+              Categories
+              <svg class="flex-none w-5 h-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div data-dropdown-target="menu" class="hidden overflow-hidden absolute z-10 mt-3 w-screen max-w-xs bg-white rounded-3xl ring-1 shadow-lg ring-gray-900/5">
+              <div class="p-4">
+                {% for category in "beverages,breads,condiments,dairy,fish,fruits,meats,nuts,oils,other,snacks,supplements,sweeteners,vegetables"|split:"," %}
+                <div class="flex relative gap-x-2 items-center p-4 leading-6 rounded-lg group hover:bg-gray-50">
+                  <div class="flex-auto">
+                    <a href="{% url 'product_category_list' category=category %}" class="block font-semibold text-gray-900">
+                      {{ category|title }}
+                      <span class="absolute inset-0"></span>
+                    </a>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
-          {% else %}
-          <a href="{% url 'account_login' %}" class="text-base font-semibold leading-6 text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
-          </a>
-          {% endif %}
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <form action="{% url 'products' %}" method="get" class="hidden lg:block">
+            <div class="relative">
+              <input type="text" name="q" placeholder="Search products" class="px-4 py-2 w-64 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
+              <button type="submit" class="flex absolute inset-y-0 right-0 items-center px-3 text-gray-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </button>
+            </div>
+          </form>
+          <div class="flex lg:hidden">
+            <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
+              class="inline-flex justify-center items-center p-2.5 -m-2.5 text-gray-700 rounded-md">
+              <span class="sr-only">Open main menu</span>
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -96,7 +111,6 @@
           class="overflow-y-auto fixed inset-y-0 right-0 z-10 px-6 py-6 w-full bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex justify-between items-center">
             <a href="{% url 'home' %}" class="p-1.5 -m-1.5">
-              <span class="sr-only">Is it Keto</span>
               <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" alt="Is it Keto Logo" />
             </a>
             <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
@@ -110,15 +124,20 @@
           </div>
           <div class="flow-root mt-6">
             <div class="-my-6 divide-y divide-gray-500/10">
-              <div class="py-6">
-                <a href="{% url 'account_login' %}" class="block px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Log in</a>
+              <div class="py-6 space-y-2">
+                <a href="{% url 'home' %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="{% url 'products' %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Products</a>
+                <div class="space-y-2">
+                  {% for category in "beverages,breads,condiments,dairy,fish,fruits,meats,nuts,oils,other,snacks,supplements,sweeteners,vegetables"|split:"," %}
+                  <a href="{% url 'product_category_list' category=category %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">{{ category|title }}</a>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </header>
-
     <div class="px-2 sm:px-0">
       {% block content %}
       {% endblock content %}

@@ -1,5 +1,5 @@
 {
-  "name": "is_it_keto",
+  "name": "isitketo",
   "version": "1.0.0",
   "description": "Migrating Is It Keto to Django",
   "scripts": {

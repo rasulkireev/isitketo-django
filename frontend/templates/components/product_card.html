@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="overflow-hidden bg-white rounded-lg border shadow-md transition-transform duration-300 hover:scale-105">
+  <a href="{% url 'product' product.slug %}" class="block pt-4">
+      {% if product.image %}
+          <div class="flex justify-center items-center mt-1 h-48">
+              <img src="{% get_media_prefix %}{{ product.image }}" loading="lazy" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
+          </div>
+      {% else %}
+          <div class="flex justify-center items-center w-full h-48 bg-gray-200">
+              <span class="text-gray-500">No image available</span>
+          </div>
+      {% endif %}
+          <div class="flex justify-center items-center px-6 h-48">
+              <img src="{{ product.keto_meter_image_path }}" loading="lazy" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
+          </div>
+  </a>
+  <div class="p-4">
+      <h2 class="mb-2 text-xl font-semibold">
+          <a href="{% url 'product' product.slug %}" class="text-blue-600 hover:text-blue-800">{{ product.name }}</a>
+      </h2>
+      <p class="text-gray-600">{{ product.short_description|truncatechars:100 }}</p>
+  </div>
+</div>
