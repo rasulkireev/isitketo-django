@@ -5,6 +5,8 @@
 <div class="container px-4 py-8 mx-auto">
     <h1 class="mb-8 text-3xl font-bold text-center text-gray-800">Browse Foods by Category</h1>
 
+    {% include "components/ads.html" %}
+
     <div class="space-y-12">
         {% for category_data in categories %}
             <div class="overflow-hidden">

@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import JSONField
+from django.urls import reverse
 
 from core.base_models import BaseModel
 from core.choices import FoodCategory
@@ -24,8 +25,13 @@ class Product(BaseModel):
     short_description = models.CharField(max_length=250)
     full_description = models.TextField()
 
-    property
+    def __str__(self):
+        return self.name
 
+    def get_absolute_url(self):
+        return reverse("product", kwargs={"slug": self.slug})
+
+    @property
     def keto_meter_image_path(self):
         return f"/static/vendors/images/keto-meter-{self.rating}.png"
 

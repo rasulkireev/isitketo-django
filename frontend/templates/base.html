@@ -1,7 +1,6 @@
 {% load webpack_loader static %}
 {% load string_extras %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,16 +79,29 @@
         </div>
 
         <div class="flex items-center space-x-4">
-          <form action="{% url 'products' %}" method="get" class="hidden lg:block">
-            <div class="relative">
-              <input type="text" name="q" placeholder="Search products" class="px-4 py-2 w-64 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
+          <div
+            data-controller="search"
+            data-search-url-value="{% url 'search_products' %}"
+            data-search-media-prefix-value="{% get_media_prefix %}"
+            class="hidden relative lg:block"
+          >
+            <form data-action="submit->search#performSearch">
+              <input
+                type="text"
+                data-search-target="input"
+                data-action="input->search#search"
+                placeholder="Search products"
+                class="px-4 py-2 w-64 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+              >
               <button type="submit" class="flex absolute inset-y-0 right-0 items-center px-3 text-gray-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </button>
-            </div>
-          </form>
+            </form>
+            <div data-search-target="results"></div>
+          </div>
+
           <div class="flex lg:hidden">
             <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
               class="inline-flex justify-center items-center p-2.5 -m-2.5 text-gray-700 rounded-md">
@@ -139,6 +151,8 @@
       </div>
     </header>
     <div class="px-2 sm:px-0">
+      {% include "components/ads.html" %}
+
       {% block content %}
       {% endblock content %}
     </div>

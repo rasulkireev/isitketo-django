@@ -1,4 +1,5 @@
-from django.db.models import Prefetch, Q
+from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
+from django.http import JsonResponse
 from django.views.generic import DetailView, ListView, TemplateView
 
 from core.models import Product, Tag
@@ -80,3 +81,34 @@ class ProductView(DetailView):
         ]
 
         return context
+
+
+def search_products(request):
+    query = request.GET.get("query", "")
+    if len(query) > 2:
+        products = (
+            Product.objects.annotate(
+                name_match=Case(
+                    When(name__icontains=query, then=Value(3)), default=Value(0), output_field=IntegerField()
+                ),
+                short_desc_match=Case(
+                    When(short_description__icontains=query, then=Value(2)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                ),
+                full_desc_match=Case(
+                    When(full_description__icontains=query, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                ),
+            )
+            .filter(
+                Q(name__icontains=query) | Q(short_description__icontains=query) | Q(full_description__icontains=query)
+            )
+            .order_by("-name_match", "-short_desc_match", "-full_desc_match", "name")[:10]
+        )
+
+        data = list(products.values("name", "slug", "image"))
+
+        return JsonResponse(data, safe=False)
+    return JsonResponse([], safe=False)
