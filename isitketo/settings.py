@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import environ
+import sentry_sdk
 import structlog
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -268,3 +269,6 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["isitketo"]["level"] = env("DJANGO_LOG_LEVEL", default="INFO")
     LOGGING["loggers"]["isitketo"]["handlers"] = ["json_console"]
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
+
+if ENVIRONMENT == "prod":
+    sentry_sdk.init(dsn=env("SENTRY_DSN"))
