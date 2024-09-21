@@ -11,6 +11,23 @@ logger = get_isitketo_logger(__name__)
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        perfect_keto_foods = Product.objects.filter(rating=5)[:4]
+
+        context["perfect_keto_foods"] = [
+            {
+                "image_url": product.image.url,
+                "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
+                "name": product.name,
+                "slug": product.slug,
+            }
+            for product in perfect_keto_foods
+        ]
+
+        return context
+
 
 class ProductsView(ListView):
     model = Product
