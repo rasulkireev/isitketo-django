@@ -33,7 +33,6 @@ shift $((OPTIND - 1))
 if [ "$server" = true ]; then
     python manage.py collectstatic --noinput
     python manage.py migrate
-    python manage.py createschedules
     # python manage.py djstripe_sync_models
     export OTEL_SERVICE_NAME=${PROJECT_NAME}_${ENVIRONMENT:-dev}
     export OTEL_RESOURCE_ATTRIBUTES=service.name=${PROJECT_NAME}_${ENVIRONMENT:-dev}
