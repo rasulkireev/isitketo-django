@@ -12,7 +12,7 @@ fi
 export PROJECT_NAME=isitketo
 export OTEL_EXPORTER_OTLP_ENDPOINT=https://signoz-otel-collector-proxy.cr.lvtd.dev
 export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-export DJANGO_SETTINGS_MODULE="isitketo.settings.production"
+export DJANGO_SETTINGS_MODULE="isitketo.settings"
 
 while getopts ":sw" option; do
     case "${option}" in
