@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block meta %}
+<title>Keto-Friendly Foods by Category | Is it Keto</title>
+<meta name="description" content="Keto Friendly Foods by Category" />
+<meta name="keywords" content="Keto, Keto diet, Keto food categories, Keto-friendly foods" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://{{ request.get_host }}{{ request.path }}" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Keto-Friendly Foods by Category | Is it Keto" />
+<meta property="og:url" content="https://{{ request.get_host }}{{ request.path }}" />
+<meta property="og:description" content="Keto Friendly Foods by Category" />
+<meta property="og:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@rasulkireev" />
+<meta name="twitter:site" content="@rasulkireev" />
+<meta name="twitter:title" content="Keto-Friendly Foods by Category | Is it Keto" />
+<meta name="twitter:description" content="Keto Friendly Foods by Category" />
+<meta name="twitter:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+{% endblock meta %}
+
 {% block content %}
 <div class="container px-4 py-8 mx-auto">
     <h1 class="mb-8 text-3xl font-bold text-center text-gray-800">Browse Foods by Category</h1>
@@ -30,3 +52,49 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for category_data in categories %}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.counter }},
+        "name": "{{ category_data.category|title }}",
+        "url": "{% url 'product_category_list' category_data.category %}",
+        "item": {
+          "@type": "ItemList",
+          "itemListElement": [
+            {% for product in category_data.products %}
+            {
+              "@type": "ListItem",
+              "position": {{ forloop.counter }},
+              "name": "{{ product.name }}",
+              "url": "{% url 'product' product.slug %}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  },
+  "name": "Keto Friendly Foods by Category",
+  "description": "Explore our collection of food categories and products to determine their keto-friendliness.",
+  "url": "https://{{ request.get_host }}{{ request.path }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Is It Keto",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% static 'vendors/favicon/logo.png' %}"
+    }
+  }
+}
+</script>
+{% endblock schema %}

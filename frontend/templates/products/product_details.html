@@ -2,6 +2,28 @@
 {% load static %}
 {% load markdown_extras %}
 
+{% block meta %}
+<title>{% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly? | Is it Keto</title>
+<meta name="description" content="{{ object.short_description|truncatechars:160 }}" />
+<meta name="keywords" content="Keto, {{ object.name }}, Keto-friendly, Ketogenic diet" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://{{ request.get_host }}{{ request.path }}" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly? | Is it Keto" />
+<meta property="og:url" content="https://{{ request.get_host }}{{ request.path }}" />
+<meta property="og:description" content="{{ object.short_description|truncatechars:200 }}" />
+<meta property="og:image" content="{% get_media_prefix %}{{ object.image }}" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@rasulkireev" />
+<meta name="twitter:site" content="@rasulkireev" />
+<meta name="twitter:title" content="{% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly? | Is it Keto" />
+<meta name="twitter:description" content="{{ object.short_description|truncatechars:200 }}" />
+<meta name="twitter:image" content="{% get_media_prefix %}{{ object.image }}" />
+{% endblock meta %}
+
 {% block content %}
 <div class="px-4 py-12 mx-auto max-w-4xl sm:px-6 lg:px-8">
   {% include "components/breadcrumbs.html" with object=object %}
@@ -30,6 +52,7 @@
         src="{{ object.keto_meter_image_path }}"
         alt="{% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly?"
         class="max-w-full h-auto"
+        loading="lazy"
       >
     </div>
 
@@ -51,7 +74,7 @@
               <img src="{{ item.image_url }}" loading="lazy" alt="{{ item.name }}" class="object-contain max-w-full max-h-full">
             </div>
             <div class="p-4">
-              <img src="{% static item.keto_meter_image %}" alt="{% if item.has_plural_title %}Are{% else %}Is{% endif %} {{ item.name }} Keto Friendly?" class="mb-2 w-full">
+              <img src="{% static item.keto_meter_image %}" loading="lazy" alt="{% if item.has_plural_title %}Are{% else %}Is{% endif %} {{ item.name }} Keto Friendly?" class="mb-2 w-full">
               <h3 class="text-lg font-semibold text-center text-blue-600">
                 <a href="{% url 'product' item.slug %}">{{ item.name }}</a>
               </h3>
@@ -63,3 +86,37 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block schema %}
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://{{ request.get_host }}/{{ object.slug }}"
+    },
+    "image": "{% get_media_prefix %}{{ object.image }}",
+    "datePublished": "{{ object.created_at }}",
+    "dateModified": "{{ object.updated_at }}",
+    "author": {
+      "@type": "Organization",
+      "name": "Is It Keto",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{% static 'vendors/favicon/logo.png' %}"
+      }
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Is It Keto",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{% static 'vendors/favicon/logo.png' %}"
+      }
+    },
+    "headline": "{% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly?",
+    "description": "Answer: {{ object.short_description }}"
+  }
+</script>
+{% endblock schema %}

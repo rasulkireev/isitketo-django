@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block meta %}
+<title>All Keto-Friendly Products | Is it Keto</title>
+<meta name="description" content="Explore our comprehensive list of keto-friendly products. Find out which foods and drinks fit into your ketogenic diet." />
+<meta name="keywords" content="Keto, Keto-friendly products, Ketogenic diet, Low-carb foods" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://{{ request.get_host }}{{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="All Keto-Friendly Products | Is it Keto" />
+<meta property="og:url" content="https://{{ request.get_host }}{{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}" />
+<meta property="og:description" content="Explore our comprehensive list of keto-friendly products. Find out which foods and drinks fit into your ketogenic diet." />
+<meta property="og:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@rasulkireev" />
+<meta name="twitter:site" content="@rasulkireev" />
+<meta name="twitter:title" content="All Keto-Friendly Products | Is it Keto" />
+<meta name="twitter:description" content="Explore our comprehensive list of keto-friendly products. Find out which foods and drinks fit into your ketogenic diet." />
+<meta name="twitter:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+{% endblock meta %}
+
 {% block content %}
 <div class="container px-4 py-8 mx-auto">
 
@@ -40,3 +62,57 @@
     {% endif %}
 </div>
 {% endblock content %}
+
+{% block schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for product in products %}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.counter }},
+        "item": {
+          "@type": "Product",
+          "name": "{{ product.name }}",
+          "url": "{% url 'product' product.slug %}",
+          "description": "{{ product.short_description|default:''|escapejs }}",
+          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% endif %}"
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  },
+  "name": "All Keto-Friendly Products",
+  "description": "Explore our complete collection of keto-friendly products across all categories.",
+  "url": "https://{{ request.get_host }}{{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Is It Keto",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% static 'vendors/favicon/logo.png' %}"
+    }
+  }
+  {% if is_paginated %}
+  ,"breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "All Products",
+      "item": "https://{{ request.get_host }}{{ request.path }}"
+    }, {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Page {{ page_obj.number }}",
+      "item": "https://{{ request.get_host }}{{ request.path }}?page={{ page_obj.number }}"
+    }]
+  }
+  {% endif %}
+}
+</script>
+{% endblock schema %}

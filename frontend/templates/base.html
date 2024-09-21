@@ -17,15 +17,15 @@
 
   {% block meta %}
   <title>Is it Keto</title>
-  <meta name="description" content="Migrating Is It Keto to Django" />
-  <meta name="keywords" content="django" />
+  <meta name="description" content="Learn which products are keto friendly" />
+  <meta name="keywords" content="Keto" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://{{ request.get_host }}/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Is it Keto" />
   <meta property="og:url" content="https://{{ request.get_host }}/" />
-  <meta property="og:description" content="Migrating Is It Keto to Django" />
+  <meta property="og:description" content="Learn which products are keto friendly" />
   <meta property="og:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
   <meta property="og:locale" content="en_US" />
 
@@ -33,12 +33,15 @@
   <meta name="twitter:creator" content="@rasulkireev" />
   <meta name="twitter:site" content="@rasulkireev" />
   <meta name="twitter:title" content="Is it Keto" />
-  <meta name="twitter:description" content="Migrating Is It Keto to Django" />
+  <meta name="twitter:description" content="Learn which products are keto friendly" />
   <meta name="twitter:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
   {% endblock meta %}
 
   {% stylesheet_pack 'index' %}
   {% javascript_pack 'index' attrs='defer' %}
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8603686157288268"
+     crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -47,7 +50,7 @@
       <nav class="container flex justify-between items-center px-4 py-8 mx-auto" aria-label="Global">
         <div class="flex items-center">
           <a href="{% url 'home' %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
-            <img class="w-auto h-16" src="{% static 'vendors/images/logo.png' %}" alt="Is it Keto Logo" />
+            <img class="w-auto h-16" src="{% static 'vendors/images/logo.png' %}" loading="lazy" alt="Is it Keto Logo" />
           </a>
         </div>
 
@@ -63,6 +66,15 @@
             </button>
             <div data-dropdown-target="menu" class="hidden overflow-hidden absolute z-10 mt-3 w-screen max-w-xs bg-white rounded-3xl ring-1 shadow-lg ring-gray-900/5">
               <div class="p-4">
+                <div class="flex relative gap-x-2 items-center p-4 leading-6 border-b-2 hover:bg-gray-50">
+                  <div class="flex-auto">
+                    <a href="{% url 'product_categories' %}" class="block font-semibold text-gray-900">
+                      All
+                      <span class="absolute inset-0"></span>
+                    </a>
+                  </div>
+                </div>
+
                 {% for category in "beverages,breads,condiments,dairy,fish,fruits,meats,nuts,oils,other,snacks,supplements,sweeteners,vegetables"|split:"," %}
                 <div class="flex relative gap-x-2 items-center p-4 leading-6 rounded-lg group hover:bg-gray-50">
                   <div class="flex-auto">
@@ -123,7 +135,7 @@
           class="overflow-y-auto fixed inset-y-0 right-0 z-10 px-6 py-6 w-full bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex justify-between items-center">
             <a href="{% url 'home' %}" class="p-1.5 -m-1.5">
-              <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" alt="Is it Keto Logo" />
+              <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" loading="lazy" alt="Is it Keto Logo" />
             </a>
             <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
               class="p-2.5 -m-2.5 text-gray-700 rounded-md">
@@ -175,7 +187,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Is it Keto",
-      "description": "Migrating Is It Keto to Django",
+      "description": "Learn which products are keto friendly",
       "thumbnailUrl": "https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}",
       "url": "https://{{ request.get_host }}/",
       "author": {
