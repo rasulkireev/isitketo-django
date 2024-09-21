@@ -103,6 +103,7 @@ class ProductView(DetailView):
 def search_products(request):
     query = request.GET.get("query", "")
     if len(query) > 2:
+        logger.info("User Search Initiated", query=query)
         products = (
             Product.objects.annotate(
                 name_match=Case(
