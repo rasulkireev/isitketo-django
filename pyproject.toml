@@ -33,6 +33,7 @@ opentelemetry-sdk = "^1.27.0"
 opentelemetry-instrumentation-psycopg2 = "^0.48b0"
 opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-logging = "^0.48b0"
+gunicorn = "^23.0.0"
 
 [tool.poetry.dev-dependencies]
 
