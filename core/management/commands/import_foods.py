@@ -1,3 +1,4 @@
+import io
 import os
 
 import yaml
@@ -5,6 +6,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
+from PIL import Image
 
 from core.choices import FoodCategory
 from core.models import Product, ProductTag, Tag
@@ -15,6 +17,13 @@ logger = get_isitketo_logger(__name__)
 
 class Command(BaseCommand):
     help = "Import food data from Markdown files"
+
+    def compress_image(self, image_path, quality=5):
+        with Image.open(image_path) as img:
+            img_io = io.BytesIO()
+            img.save(img_io, format="JPEG", quality=quality)
+            img_io.seek(0)
+            return ContentFile(img_io.getvalue())
 
     def handle(self, *args, **options):
         foods_dir = os.path.join(settings.BASE_DIR, "core", "old_content", "foods")
@@ -57,9 +66,17 @@ class Command(BaseCommand):
                 image_path = os.path.join(images_dir, image_filename)
                 if os.path.exists(image_path):
                     try:
+                        # Save original image
                         with open(image_path, "rb") as img_file:
                             file_content = ContentFile(img_file.read(), name=image_filename)
-                            product.image.save(f"{image_filename}", file_content, save=True)
+                            product.image.save(f"{image_filename}", file_content, save=False)
+
+                        # Save compressed image
+                        compressed_content = self.compress_image(image_path)
+                        compressed_filename = f"compressed_{image_filename}"
+                        product.compressed_image.save(compressed_filename, compressed_content, save=False)
+
+                        product.save()
                     except Exception as e:
                         logger.error(f"Error uploading image for {data['name']}: {str(e)}")
                         self.stdout.write(self.style.ERROR(f'Failed to upload image for {data["name"]}: {str(e)}'))

@@ -59,21 +59,6 @@ services:
     ports:
       - "9091:9091"
 
-  backend-thin:
-    build:
-      context: .
-      dockerfile: Dockerfile-python
-    working_dir: /app
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-    profiles:
-      - manual
-
 volumes:
   postgres_data:
   redis_data:

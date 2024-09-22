@@ -18,7 +18,7 @@ class HomeView(TemplateView):
 
         context["perfect_keto_foods"] = [
             {
-                "image_url": product.image.url,
+                "image_url": product.compressed_image.url,
                 "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
                 "name": product.name,
                 "slug": product.slug,
@@ -89,7 +89,7 @@ class ProductView(DetailView):
 
         context["related_keto_foods"] = [
             {
-                "image_url": product.image.url,
+                "image_url": product.compressed_image.url,
                 "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
                 "name": product.name,
                 "slug": product.slug,
@@ -126,7 +126,7 @@ def search_products(request):
             .order_by("-name_match", "-short_desc_match", "-full_desc_match", "name")[:10]
         )
 
-        data = list(products.values("name", "slug", "image"))
+        data = list(products.values("name", "slug", "compressed_image"))
 
         return JsonResponse(data, safe=False)
     return JsonResponse([], safe=False)

@@ -19,8 +19,11 @@ class Product(BaseModel):
     data = JSONField(default=dict)
     has_plural_title = models.BooleanField(default=False)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
+
     ai_generated_image = models.ImageField(upload_to="ai_product_image/", blank=True)
+    compressed_ai_generated_image = models.ImageField(upload_to="compressed_ai_product_image/", blank=True)
     image = models.ImageField(upload_to="product_image/", blank=True)
+    compressed_image = models.ImageField(upload_to="compressed_product_image/", blank=True)
 
     short_description = models.CharField(max_length=250)
     full_description = models.TextField()
