@@ -47,6 +47,9 @@
 </head>
 
 <body>
+  {% block default_messages %}
+      {% include "components/messages.html" with messages=messages %}
+  {% endblock default_messages %}
   <div data-controller="dropdown" class="bg-white">
     <header class="bg-yellow-50">
       <nav class="container flex justify-between items-center px-4 py-8 mx-auto" aria-label="Global">

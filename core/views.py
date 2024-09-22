@@ -1,8 +1,14 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
 from django.views.generic import DetailView, ListView, TemplateView
+from django_q.tasks import async_task
 
 from core.models import Product, Tag
+from core.tasks import create_product
 from isitketo.utils import get_isitketo_logger
 
 logger = get_isitketo_logger(__name__)
@@ -130,3 +136,22 @@ def search_products(request):
 
         return JsonResponse(data, safe=False)
     return JsonResponse([], safe=False)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+@require_http_methods(["GET", "POST"])
+def bulk_create_products(request):
+    if request.method == "POST":
+        product_list = request.POST.get("product_list", "").split("\n")
+        product_list = [product.strip() for product in product_list if product.strip()]
+
+        if product_list:
+            for product in product_list:
+                async_task(create_product, product)
+            messages.success(request, "Product creation task has been queued.")
+        else:
+            messages.error(request, "No valid products were provided.")
+
+        return redirect("bulk_create_products")
+
+    return render(request, "pages/bulk_create_products.html")

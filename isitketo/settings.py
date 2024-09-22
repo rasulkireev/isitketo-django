@@ -145,6 +145,7 @@ STATICFILES_DIRS = [
 
 bucket_name = f"isitketo-{ENVIRONMENT}"
 
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
