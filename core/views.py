@@ -8,7 +8,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django_q.tasks import async_task
 
 from core.models import Product, Tag
-from core.tasks import create_product
+from core.tasks import schedule_products_creation
 from isitketo.utils import get_isitketo_logger
 
 logger = get_isitketo_logger(__name__)
@@ -147,7 +147,7 @@ def bulk_create_products(request):
 
         if product_list:
             for product in product_list:
-                async_task(create_product, product)
+                async_task(schedule_products_creation, product)
             messages.success(request, "Product creation task has been queued.")
         else:
             messages.error(request, "No valid products were provided.")

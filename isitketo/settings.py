@@ -273,3 +273,6 @@ if ENVIRONMENT == "prod":
 
 if ENVIRONMENT == "prod":
     sentry_sdk.init(dsn=env("SENTRY_DSN"))
+
+FAT_SECRET_CLIENT_ID = env("FAT_SECRET_CLIENT_ID")
+FAT_SECRET_CLIENT_SECRET = env("FAT_SECRET_CLIENT_SECRET")
