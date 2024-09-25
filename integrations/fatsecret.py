@@ -1,15 +1,12 @@
 import base64
 
-import environ
 import requests
-
-env = environ.Env()
 
 
 class FatSecretClient:
-    def __init__(self):
-        self.client_id = env("FAT_SECRET_CLIENT_ID")
-        self.client_secret = env("FAT_SECRET_CLIENT_SECRET")
+    def __init__(self, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret
         self.base_url = "https://oauth.fatsecret.com/connect/token"
         self.access_token = None
 
@@ -34,36 +31,26 @@ class FatSecretClient:
         else:
             raise Exception(f"Failed to obtain access token: {response.text}")
 
-    def make_api_request(self, endpoint, method="GET", params=None):
+    def search(self, query: str):
         if not self.access_token:
             self.get_access_token()
 
-        headers = {"Authorization": f"Bearer {self.access_token}", "Content-Type": "application/json"}
+        res = requests.get(
+            "https://platform.fatsecret.com/rest/foods/search/v1",
+            params={"search_expression": query, "format": "json"},
+            headers={"Authorization": f"Bearer {self.access_token}"},
+        )
 
-        url = f"https://platform.fatsecret.com/rest/server.api{endpoint}"
+        return res.json()["foods"]["food"]
 
-        if method == "GET":
-            response = requests.get(url, headers=headers, params=params)
-        elif method == "POST":
-            response = requests.post(url, headers=headers, json=params)
-        else:
-            raise ValueError("Unsupported HTTP method")
+    def get_product_info(self, food_id):
+        if not self.access_token:
+            self.get_access_token()
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise Exception(f"API request failed: {response.text}")
+        res = requests.get(
+            "https://platform.fatsecret.com/rest/food/v4",
+            params={"food_id": food_id, "format": "json"},
+            headers={"Authorization": f"Bearer {self.access_token}"},
+        )
 
-
-def search(query: str):
-    client = FatSecretClient()
-    token = client.get_access_token()
-
-    search_params = {"search_expression": query, "format": "json"}
-    res = requests.get(
-        "https://platform.fatsecret.com/rest/foods/search/v1",
-        params=search_params,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-
-    return res.json()["foods"]["food"]
+        return res.json()["food"]

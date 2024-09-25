@@ -39,7 +39,7 @@ class ProductsView(ListView):
     model = Product
     template_name = "pages/products.html"
     context_object_name = "products"
-    paginate_by = 20
+    paginate_by = 8
     ordering = "-created_at"
 
 
@@ -47,7 +47,7 @@ class ProductCategoryListView(ListView):
     model = Product
     template_name = "pages/product_category_list.html"
     context_object_name = "products"
-    paginate_by = 20
+    paginate_by = 8
     ordering = "-created_at"
 
     def get_queryset(self):
@@ -132,7 +132,7 @@ def search_products(request):
             .order_by("-name_match", "-short_desc_match", "-full_desc_match", "name")[:10]
         )
 
-        data = list(products.values("name", "slug", "compressed_image"))
+        data = list(products.values("name", "slug"))
 
         return JsonResponse(data, safe=False)
     return JsonResponse([], safe=False)

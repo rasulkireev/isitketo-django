@@ -9,7 +9,6 @@ from core.choices import FoodCategory
 
 class Product(BaseModel):
     name = models.CharField(max_length=250, blank=True)
-    brand = models.CharField(max_length=250, blank=True)
     slug = models.SlugField(max_length=150, unique=True)
     category = models.CharField(
         max_length=40,
