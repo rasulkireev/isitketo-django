@@ -35,10 +35,11 @@ def schedule_products_creation(product_name: str):
         async_task(create_product, food_id)
         count += 1
 
-    return f"Scheduled {count} products to get created."
+    return f"Scheduled {count} products to get created for '{product_name}' query."
 
 
 def create_product(food_id):
+    logger.info("Creating Product", food_id=food_id)
     product_info = fatsecret_client.get_product_info(food_id)
 
     macros = product_info["servings"]["serving"][0]
@@ -80,6 +81,8 @@ def create_product(food_id):
         ProductTag.objects.create(product=product, tag=tag)
 
     async_task(generate_and_save_ai_image, product.id)
+
+    return f"Created Product Object: {product.name}"
 
 
 def generate_and_save_ai_image(product_id):

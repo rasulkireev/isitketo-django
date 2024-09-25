@@ -2,6 +2,10 @@ import base64
 
 import requests
 
+from isitketo.utils import get_isitketo_logger
+
+logger = get_isitketo_logger(__name__)
+
 
 class FatSecretClient:
     def __init__(self, client_id, client_secret):
@@ -32,6 +36,10 @@ class FatSecretClient:
             raise Exception(f"Failed to obtain access token: {response.text}")
 
     def search(self, query: str):
+        logger.info(
+            "Searching FatSecret Database",
+            query=query,
+        )
         if not self.access_token:
             self.get_access_token()
 
@@ -44,12 +52,13 @@ class FatSecretClient:
         return res.json()["foods"]["food"]
 
     def get_product_info(self, food_id):
+        logger.info("Getting Detailed Product Info from Fatsecret", food_id=food_id)
         if not self.access_token:
             self.get_access_token()
 
         res = requests.get(
             "https://platform.fatsecret.com/rest/food/v4",
-            params={"food_id": food_id, "format": "json"},
+            params={"food_id": food_id, "include_food_images": "true", "format": "json"},
             headers={"Authorization": f"Bearer {self.access_token}"},
         )
 

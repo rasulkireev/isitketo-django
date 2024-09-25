@@ -37,6 +37,7 @@ class DivErrorList(ErrorList):
 
 
 def guess_food_category(food_name):
+    logger.info("Generating Food Category", food_name=food_name)
     prompt = f"""Given the following food categories:
 
 {', '.join(FoodCategory)}
@@ -60,6 +61,7 @@ Please categorize the food item "{food_name}" into one of these categories. Resp
 
 
 def generate_tags_for_food(food_name: str) -> List[str]:
+    logger.info("Generating Tags for Product", food_name=food_name)
     prompt = f"""Given the food item "{food_name}", please generate a list of relevant tags.
     These tags should describe characteristics such as:
     - Flavor profile
@@ -109,6 +111,7 @@ def is_food_name_plural(food_name: str) -> bool:
 
 
 def rate_food_for_keto(food_name: str, macros: Dict[str, str]) -> int:
+    logger.info("Generating a Keto Rating for Product", food_name=food_name)
     prompt = f"""Given the food item "{food_name}" and its nutritional information, rate its suitability for a ketogenic diet on a scale of 1 to 5, where 1 is least suitable and 5 is most suitable.
 
 Nutritional information per {macros['serving_description']} ({macros['metric_serving_amount']} {macros['metric_serving_unit']}):
@@ -146,6 +149,7 @@ Provide only a single number (1, 2, 3, 4, or 5) as your response, with no additi
 
 
 def is_food_keto_friendly_short_answer(food_name: str) -> str:
+    logger.info("Generating a Short Answer for Product", food_name=food_name)
     prompt = f"""Is {food_name} keto friendly?
     Provide a concise answer explaining why or why not.
     Your response should be informative yet brief, not exceeding 250 characters."""
@@ -162,6 +166,8 @@ def is_food_keto_friendly_short_answer(food_name: str) -> str:
 
 
 def get_detailed_keto_description(food_name: str, macros: Dict[str, str]) -> str:
+    logger.info("Generating a Detailed Answer for Product", food_name=food_name)
+
     prompt = f"""Provide a detailed description of {food_name} and its relevance to the ketogenic diet. Use the following nutritional information for a {macros['serving_description']} ({macros['metric_serving_amount']} {macros['metric_serving_unit']}):
 
     - Calories: {macros['calories']}

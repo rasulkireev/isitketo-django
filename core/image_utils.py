@@ -23,6 +23,8 @@ def generate_food_image(food_item, style="realistic", size="medium"):
     :param size: The size of the food item (default is "medium")
     :return: URL of the generated image
     """
+    logger.info("Generating the AI image", food_name=food_item)
+
     # List of adjectives to enhance the prompt
     adjectives = ["delicious", "mouth-watering", "appetizing", "tempting", "scrumptious"]
 
@@ -64,6 +66,8 @@ def compress_image(image_field, quality=20, format="JPEG"):
     :param format: str, output format ('JPEG', 'PNG', etc.)
     :return: ContentFile of the compressed image
     """
+    logger.info("Compressing the image", image=image_field)
+
     img = Image.open(image_field)
 
     # Convert to RGB if image has an alpha channel
