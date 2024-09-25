@@ -8,7 +8,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django_q.tasks import async_task
 
 from core.models import Product, Tag
-from core.tasks import create_product
+from core.tasks import schedule_products_creation
 from isitketo.utils import get_isitketo_logger
 
 logger = get_isitketo_logger(__name__)
@@ -39,7 +39,7 @@ class ProductsView(ListView):
     model = Product
     template_name = "pages/products.html"
     context_object_name = "products"
-    paginate_by = 20
+    paginate_by = 8
     ordering = "-created_at"
 
 
@@ -47,7 +47,7 @@ class ProductCategoryListView(ListView):
     model = Product
     template_name = "pages/product_category_list.html"
     context_object_name = "products"
-    paginate_by = 20
+    paginate_by = 8
     ordering = "-created_at"
 
     def get_queryset(self):
@@ -132,7 +132,7 @@ def search_products(request):
             .order_by("-name_match", "-short_desc_match", "-full_desc_match", "name")[:10]
         )
 
-        data = list(products.values("name", "slug", "compressed_image"))
+        data = list(products.values("name", "slug"))
 
         return JsonResponse(data, safe=False)
     return JsonResponse([], safe=False)
@@ -147,7 +147,7 @@ def bulk_create_products(request):
 
         if product_list:
             for product in product_list:
-                async_task(create_product, product)
+                async_task(schedule_products_creation, product)
             messages.success(request, "Product creation task has been queued.")
         else:
             messages.error(request, "No valid products were provided.")

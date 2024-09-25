@@ -18,7 +18,7 @@ logger = get_isitketo_logger(__name__)
 class Command(BaseCommand):
     help = "Import food data from Markdown files"
 
-    def compress_image(self, image_path, quality=5):
+    def compress_image(self, image_path, quality=20):
         with Image.open(image_path) as img:
             img_io = io.BytesIO()
             img.save(img_io, format="JPEG", quality=quality)

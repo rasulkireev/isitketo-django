@@ -110,7 +110,6 @@ export default class extends Controller {
       const html = data.map(item => `
         <li class="px-4 py-2 cursor-pointer hover:bg-gray-100">
           <a href="/${item.slug}" data-action="click->search#clearSearch" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900">
-            <img src="${this.mediaPrefixValue}${item.compressed_image}" alt="${item.name}" loading="lazy" class="object-cover flex-shrink-0 mr-2 w-6 h-6 rounded-full">
             <span class="truncate">${item.name}</span>
           </a>
         </li>

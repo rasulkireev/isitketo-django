@@ -35,6 +35,8 @@ opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-logging = "^0.48b0"
 gunicorn = "^23.0.0"
 sentry-sdk = {extras = ["django"], version = "^2.14.0"}
+anthropic = "^0.34.2"
+replicate = "^0.34.1"
 
 [tool.poetry.dev-dependencies]
 
