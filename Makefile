@@ -6,4 +6,7 @@ shell:
 	docker compose run --rm backend python ./manage.py shell_plus --ipython
 
 prod-shell:
-	./deployment/prod-shell.sh
+	./scripts/prod-shell.sh
+
+prod-generate-ai-images:
+	./scripts/generate_ai_images.sh

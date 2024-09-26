@@ -1,3 +1,5 @@
+import requests
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
@@ -7,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import DetailView, ListView, TemplateView
 from django_q.tasks import async_task
 
+from core.choices import FoodCategory
 from core.models import Product, Tag
 from core.tasks import schedule_products_creation
 from isitketo.utils import get_isitketo_logger
@@ -22,7 +25,7 @@ class HomeView(TemplateView):
 
         perfect_keto_foods = (Product.objects.filter(rating=5).order_by("-created_at"))[:4]
 
-        context["related_keto_foods"] = []
+        context["other_keto_foods"] = []
         for product in perfect_keto_foods:
             image_url = None
             if product.compressed_ai_generated_image:
@@ -31,7 +34,7 @@ class HomeView(TemplateView):
                 image_url = product.compressed_image.url
 
             if image_url:
-                context["related_keto_foods"].append(
+                context["other_keto_foods"].append(
                     {
                         "image_url": image_url,
                         "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
@@ -39,8 +42,6 @@ class HomeView(TemplateView):
                         "slug": product.slug,
                     }
                 )
-
-        return context
 
         return context
 
@@ -75,15 +76,13 @@ class ProductCategories(ListView):
     context_object_name = "categories"
 
     def get_queryset(self):
-        unique_categories = Product.objects.values_list("category", flat=True).distinct().order_by("category")
-
         queryset = []
-        for category in unique_categories:
-            products = Product.objects.filter(category=category).prefetch_related(
+        for category in FoodCategory:
+            products = Product.objects.filter(category=category.value).prefetch_related(
                 Prefetch("tags", queryset=Tag.objects.all())
             )[:4]
 
-            queryset.append({"category": category, "products": products})
+            queryset.append({"category": category.value, "products": products})
 
         return queryset
 
@@ -101,7 +100,7 @@ class ProductView(DetailView):
             Product.objects.filter(rating__gte=4).exclude(id=self.object.id).order_by("-created_at").distinct()[:4]
         )
 
-        context["related_keto_foods"] = []
+        context["other_keto_foods"] = []
         for product in related_products:
             image_url = None
             if product.compressed_ai_generated_image:
@@ -110,7 +109,7 @@ class ProductView(DetailView):
                 image_url = product.compressed_image.url
 
             if image_url:
-                context["related_keto_foods"].append(
+                context["other_keto_foods"].append(
                     {
                         "image_url": image_url,
                         "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
@@ -171,3 +170,39 @@ def bulk_create_products(request):
         return redirect("bulk_create_products")
 
     return render(request, "pages/bulk_create_products.html")
+
+
+@require_http_methods(["GET", "POST"])
+def newsletter_signup(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        if email:
+            # Get the referrer URL from the request
+            referrer_url = request.META.get("HTTP_REFERER", "https://isitketo.org")
+
+            data = {
+                "email_address": str(email),
+                "referrer_url": referrer_url,
+                "subscriber_type": "unactivated",
+            }
+
+            try:
+                response = requests.post(
+                    "https://api.buttondown.email/v1/subscribers",
+                    headers={"Authorization": f"Token {settings.BUTTONDOWN_API_TOKEN}"},
+                    json=data,
+                    timeout=10,
+                )
+                response.raise_for_status()
+                result = response.json()
+                if "id" in result:
+                    return JsonResponse({"success": True, "message": "Successfully subscribed!"})
+                else:
+                    logger.warning("Unexpected Buttondown API response", extra={"result": result})
+                    return JsonResponse({"success": False, "message": "Subscription failed. Please try again."})
+            except requests.RequestException as e:
+                logger.error("Error calling Buttondown API", exc_info=True, extra={"error": str(e)})
+                return JsonResponse({"success": False, "message": "An error occurred. Please try again later."})
+        else:
+            return JsonResponse({"success": False, "message": "Email is required."})
+    return render(request, "newsletter_signup.html")

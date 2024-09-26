@@ -1,0 +1,29 @@
+<div class="mx-auto mt-16 max-w-2xl">
+  <div
+    data-controller="newsletter"
+    class="relative"
+  >
+    <h2 class="mb-4 text-2xl font-bold text-gray-900">Subscribe to Our Newsletter</h2>
+    <form data-action="submit->newsletter#subscribe" class="relative">
+      {% csrf_token %}
+      <div>
+        <label for="newsletter-email" class="block mb-2">Enter your email address</label>
+        <div class="relative">
+          <input
+            id="newsletter-email"
+            type="email"
+            name="email"
+            data-newsletter-target="email"
+            placeholder="your@email.com"
+            required
+            class="px-4 py-3 pr-12 w-full text-lg rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+          <button type="submit" class="flex absolute inset-y-0 right-0 items-center px-4 text-white bg-indigo-600 rounded-r-md transition duration-150 ease-in-out hover:bg-indigo-700">
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </form>
+    <p data-newsletter-target="message" class="mt-2 text-sm text-gray-600"></p>
+  </div>
+</div>

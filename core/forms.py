@@ -1,6 +1,6 @@
 from allauth.account.forms import LoginForm, SignupForm
 
-from .utils import DivErrorList
+from core.utils import DivErrorList
 
 
 class CustomSignUpForm(SignupForm):
