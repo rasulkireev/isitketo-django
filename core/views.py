@@ -22,19 +22,25 @@ class HomeView(TemplateView):
 
         perfect_keto_foods = Product.objects.filter(rating=5)[:4]
 
-        context["perfect_keto_foods"] = [
-            {
-                "image_url": (
-                    product.compressed_ai_generated_image.url
-                    if product.compressed_ai_generated_image
-                    else product.compressed_image.url
-                ),
-                "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
-                "name": product.name,
-                "slug": product.slug,
-            }
-            for product in perfect_keto_foods
-        ]
+        context["related_keto_foods"] = []
+        for product in perfect_keto_foods:
+            image_url = None
+            if product.compressed_ai_generated_image:
+                image_url = product.compressed_ai_generated_image.url
+            elif product.compressed_image:
+                image_url = product.compressed_image.url
+
+            if image_url:
+                context["related_keto_foods"].append(
+                    {
+                        "image_url": image_url,
+                        "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
+                        "name": product.name,
+                        "slug": product.slug,
+                    }
+                )
+
+        return context
 
         return context
 
@@ -97,19 +103,23 @@ class ProductView(DetailView):
             .distinct()[:4]
         )
 
-        context["related_keto_foods"] = [
-            {
-                "image_url": (
-                    product.compressed_ai_generated_image.url
-                    if product.compressed_ai_generated_image
-                    else product.compressed_image.url
-                ),
-                "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
-                "name": product.name,
-                "slug": product.slug,
-            }
-            for product in related_products
-        ]
+        context["related_keto_foods"] = []
+        for product in related_products:
+            image_url = None
+            if product.compressed_ai_generated_image:
+                image_url = product.compressed_ai_generated_image.url
+            elif product.compressed_image:
+                image_url = product.compressed_image.url
+
+            if image_url:
+                context["related_keto_foods"].append(
+                    {
+                        "image_url": image_url,
+                        "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
+                        "name": product.name,
+                        "slug": product.slug,
+                    }
+                )
 
         return context
 
