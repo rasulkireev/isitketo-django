@@ -2,6 +2,7 @@ import requests
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
+from django.db import IntegrityError
 from django.utils.text import slugify
 from django_q.tasks import async_task
 
@@ -50,6 +51,12 @@ def create_product(food_id):
         product_name = product_name + f" by {product_brand}"
 
     slug = slugify(product_name)
+
+    existing_product = Product.objects.filter(slug=slug).first()
+    if existing_product:
+        logger.info("Product with this slug already exists", slug=slug)
+        return f"Product already exists: {existing_product.name}"
+
     category = guess_food_category(product_name)
     has_plural_title = is_food_name_plural(product_name)
     rating = rate_food_for_keto(product_name, macros)
@@ -68,16 +75,20 @@ def create_product(food_id):
         data=product_info,
     )
 
-    product = Product.objects.create(
-        name=product_name,
-        slug=slug,
-        category=category.value,
-        has_plural_title=has_plural_title,
-        rating=rating,
-        short_description=short_description,
-        full_description=full_description,
-        data=product_info,
-    )
+    try:
+        product = Product.objects.create(
+            name=product_name,
+            slug=slug,
+            category=category.value,
+            has_plural_title=has_plural_title,
+            rating=rating,
+            short_description=short_description,
+            full_description=full_description,
+            data=product_info,
+        )
+    except IntegrityError:
+        logger.warning("IntegrityError while creating product", slug=slug)
+        return f"Product creation failed: A product with slug '{slug}' already exists"
 
     if "food_images" in product_info and product_info["food_images"].get("food_image"):
         image_url = product_info["food_images"]["food_image"][0]["image_url"]
