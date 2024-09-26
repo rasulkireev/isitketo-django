@@ -271,6 +271,13 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["isitketo"]["handlers"] = ["json_console"]
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
 
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": env("REDIS_URL"),
+        }
+    }
+
 if ENVIRONMENT == "prod":
     sentry_sdk.init(dsn=env("SENTRY_DSN"))
 

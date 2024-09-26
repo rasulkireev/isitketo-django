@@ -1,8 +1,10 @@
+import random
+
 import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
+from django.db.models import Case, Count, IntegerField, Prefetch, Q, Value, When
 from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -23,7 +25,9 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        perfect_keto_foods = (Product.objects.filter(rating=5).order_by("-created_at"))[:4]
+        count = Product.objects.filter(rating=5).aggregate(count=Count("id"))["count"]
+        random_indices = random.sample(range(count), min(4, count))
+        perfect_keto_foods = [Product.objects.filter(rating=5)[index] for index in random_indices]
 
         context["other_keto_foods"] = []
         for product in perfect_keto_foods:
@@ -109,12 +113,12 @@ class ProductView(DetailView):
 
         context["keto_meter_image_path"] = f"vendors/images/keto-meter-{self.object.rating}.png"
 
-        related_products = (
-            Product.objects.filter(rating__gte=4).exclude(id=self.object.id).order_by("-created_at").distinct()[:4]
-        )
+        count = Product.objects.filter(rating=5).exclude(id=self.object.id).aggregate(count=Count("id"))["count"]
+        random_indices = random.sample(range(count), min(4, count))
+        perfect_keto_foods = [Product.objects.filter(rating=5)[index] for index in random_indices]
 
         context["other_keto_foods"] = []
-        for product in related_products:
+        for product in perfect_keto_foods:
             image_url = None
             if product.compressed_ai_generated_image:
                 image_url = product.compressed_ai_generated_image.url
