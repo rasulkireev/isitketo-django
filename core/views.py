@@ -3,13 +3,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
+from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 from django.views.generic import DetailView, ListView, TemplateView
 from django_q.tasks import async_task
 
-from core.choices import FoodCategory
 from core.models import Product, Tag
 from core.tasks import schedule_products_creation
 from isitketo.utils import get_isitketo_logger
@@ -76,13 +76,26 @@ class ProductCategories(ListView):
     context_object_name = "categories"
 
     def get_queryset(self):
+        # Get unique categories, converting to lowercase and ordering
+        unique_categories = (
+            Product.objects.annotate(category_lower=Lower("category"))
+            .values_list("category_lower", flat=True)
+            .distinct()
+            .order_by("category_lower")
+        )
+
         queryset = []
-        for category in FoodCategory:
-            products = Product.objects.filter(category=category.value).prefetch_related(
+        for category_lower in unique_categories:
+            # Get the original category name (preserving the original case for display)
+            original_category = (
+                Product.objects.filter(category__iexact=category_lower).values_list("category", flat=True).first()
+            )
+
+            products = Product.objects.filter(category__iexact=category_lower).prefetch_related(
                 Prefetch("tags", queryset=Tag.objects.all())
             )[:4]
 
-            queryset.append({"category": category.value, "products": products})
+            queryset.append({"category": original_category, "products": products})
 
         return queryset
 
