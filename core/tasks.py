@@ -56,6 +56,18 @@ def create_product(food_id):
     short_description = is_food_keto_friendly_short_answer(product_name)
     full_description = get_detailed_keto_description(product_name, macros)
 
+    logger.info(
+        "Trying to create a product object",
+        name=product_name,
+        slug=slug,
+        category=category.value,
+        has_plural_title=has_plural_title,
+        rating=rating,
+        short_description=short_description,
+        full_description=full_description,
+        data=product_info,
+    )
+
     product = Product.objects.create(
         name=product_name,
         slug=slug,
@@ -67,13 +79,16 @@ def create_product(food_id):
         data=product_info,
     )
 
-    image_url = product_info["food_images"]["food_image"][0]["image_url"]
-    response = requests.get(image_url)
-    if response.status_code == 200:
-        product.image.save(f"{slug}.jpg", ContentFile(response.content), save=True)
+    if "food_images" in product_info and product_info["food_images"].get("food_image"):
+        image_url = product_info["food_images"]["food_image"][0]["image_url"]
+        response = requests.get(image_url)
+        if response.status_code == 200:
+            product.image.save(f"{slug}.jpg", ContentFile(response.content), save=True)
 
-        compressed_image = compress_image(product.image)
-        product.compressed_image.save(f"{slug}_compressed.jpg", compressed_image, save=False)
+            compressed_image = compress_image(product.image)
+            product.compressed_image.save(f"{slug}_compressed.jpg", compressed_image, save=False)
+    else:
+        logger.warning("No image found for product", food_id=food_id)
 
     tags = generate_tags_for_food(product_name)
     for tag_name in tags:

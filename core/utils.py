@@ -112,14 +112,23 @@ def is_food_name_plural(food_name: str) -> bool:
 
 def rate_food_for_keto(food_name: str, macros: Dict[str, str]) -> int:
     logger.info("Generating a Keto Rating for Product", food_name=food_name)
+
+    serving_description = macros.get("serving_description", "serving")
+    metric_serving_amount = macros.get("metric_serving_amount", "")
+    metric_serving_unit = macros.get("metric_serving_unit", "")
+
+    serving_info = f"{serving_description}"
+    if metric_serving_amount and metric_serving_unit:
+        serving_info += f" ({metric_serving_amount} {metric_serving_unit})"
+
     prompt = f"""Given the food item "{food_name}" and its nutritional information, rate its suitability for a ketogenic diet on a scale of 1 to 5, where 1 is least suitable and 5 is most suitable.
 
-Nutritional information per {macros['serving_description']} ({macros['metric_serving_amount']} {macros['metric_serving_unit']}):
-- Calories: {macros['calories']}
-- Carbohydrates: {macros['carbohydrate']}g
-- Protein: {macros['protein']}g
-- Fat: {macros['fat']}g
-- Fiber: {macros['fiber']}g
+Nutritional information per {serving_info}:
+- Calories: {macros.get('calories', 'N/A')}
+- Carbohydrates: {macros.get('carbohydrate', 'N/A')}g
+- Protein: {macros.get('protein', 'N/A')}g
+- Fat: {macros.get('fat', 'N/A')}g
+- Fiber: {macros.get('fiber', 'N/A')}g
 
 Consider the following factors:
 1. Low carbohydrate content (the lower, the better for keto)
@@ -168,16 +177,30 @@ def is_food_keto_friendly_short_answer(food_name: str) -> str:
 def get_detailed_keto_description(food_name: str, macros: Dict[str, str]) -> str:
     logger.info("Generating a Detailed Answer for Product", food_name=food_name)
 
-    prompt = f"""Provide a detailed description of {food_name} and its relevance to the ketogenic diet. Use the following nutritional information for a {macros['serving_description']} ({macros['metric_serving_amount']} {macros['metric_serving_unit']}):
+    serving_description = macros.get("serving_description", "serving")
+    metric_serving_amount = macros.get("metric_serving_amount", "")
+    metric_serving_unit = macros.get("metric_serving_unit", "")
 
-    - Calories: {macros['calories']}
-    - Carbohydrates: {macros['carbohydrate']}g
-    - Fiber: {macros['fiber']}g
-    - Protein: {macros['protein']}g
-    - Fat: {macros['fat']}g
-    - Saturated Fat: {macros['saturated_fat']}g
-    - Polyunsaturated Fat: {macros['polyunsaturated_fat']}g
-    - Monounsaturated Fat: {macros['monounsaturated_fat']}g
+    serving_info = f"{serving_description}"
+    if metric_serving_amount and metric_serving_unit:
+        serving_info += f" ({metric_serving_amount} {metric_serving_unit})"
+
+    nutritional_info = f"""
+    - Calories: {macros.get('calories', 'N/A')}
+    - Carbohydrates: {macros.get('carbohydrate', 'N/A')}g
+    - Fiber: {macros.get('fiber', 'N/A')}g
+    - Protein: {macros.get('protein', 'N/A')}g
+    - Fat: {macros.get('fat', 'N/A')}g"""
+
+    if "saturated_fat" in macros:
+        nutritional_info += f"\n    - Saturated Fat: {macros['saturated_fat']}g"
+    if "polyunsaturated_fat" in macros:
+        nutritional_info += f"\n    - Polyunsaturated Fat: {macros['polyunsaturated_fat']}g"
+    if "monounsaturated_fat" in macros:
+        nutritional_info += f"\n    - Monounsaturated Fat: {macros['monounsaturated_fat']}g"
+
+    prompt = f"""Provide a detailed description of {food_name} and its relevance to the ketogenic diet. Use the following nutritional information for a {serving_info}:
+    {nutritional_info}
 
     Include the following points in your analysis:
 

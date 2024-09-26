@@ -25,7 +25,7 @@ class Product(BaseModel):
     image = models.ImageField(upload_to="product_image/", blank=True)
     compressed_image = models.ImageField(upload_to="compressed_product_image/", blank=True)
 
-    short_description = models.CharField(max_length=250)
+    short_description = models.CharField(max_length=350)
     full_description = models.TextField()
 
     def __str__(self):
