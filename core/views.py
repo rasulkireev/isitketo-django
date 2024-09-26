@@ -20,7 +20,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        perfect_keto_foods = Product.objects.filter(rating=5)[:4]
+        perfect_keto_foods = (Product.objects.filter(rating=5).order_by("-created_at"))[:4]
 
         context["related_keto_foods"] = []
         for product in perfect_keto_foods:
@@ -98,9 +98,7 @@ class ProductView(DetailView):
         context["keto_meter_image_path"] = f"vendors/images/keto-meter-{self.object.rating}.png"
 
         related_products = (
-            Product.objects.filter((Q(category=self.object.category) | Q(rating=self.object.rating)) & Q(rating__gte=4))
-            .exclude(id=self.object.id)
-            .distinct()[:4]
+            Product.objects.filter(rating__gte=4).exclude(id=self.object.id).order_by("-created_at").distinct()[:4]
         )
 
         context["related_keto_foods"] = []
