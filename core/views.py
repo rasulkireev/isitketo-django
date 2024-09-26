@@ -24,7 +24,11 @@ class HomeView(TemplateView):
 
         context["perfect_keto_foods"] = [
             {
-                "image_url": product.compressed_image.url,
+                "image_url": (
+                    product.compressed_ai_generated_image.url
+                    if product.compressed_ai_generated_image
+                    else product.compressed_image.url
+                ),
                 "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
                 "name": product.name,
                 "slug": product.slug,
@@ -95,7 +99,11 @@ class ProductView(DetailView):
 
         context["related_keto_foods"] = [
             {
-                "image_url": product.compressed_image.url,
+                "image_url": (
+                    product.compressed_ai_generated_image.url
+                    if product.compressed_ai_generated_image
+                    else product.compressed_image.url
+                ),
                 "keto_meter_image": f"vendors/images/keto-meter-{product.rating}.png",
                 "name": product.name,
                 "slug": product.slug,
