@@ -62,37 +62,7 @@
         <div class="hidden flex-grow justify-center lg:flex lg:space-x-8">
           <a href="{% url 'home' %}" class="font-semibold leading-6 text-gray-900 hover:text-gray-600">Home</a>
           <a href="{% url 'products' %}" class="font-semibold leading-6 text-gray-900 hover:text-gray-600">Products</a>
-          <div class="relative">
-            <button type="button" class="flex gap-x-1 items-center font-semibold leading-6 text-gray-900 hover:text-gray-600" aria-expanded="false" data-action="dropdown#toggle click@window->dropdown#hide">
-              Categories
-              <svg class="flex-none w-5 h-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-              </svg>
-            </button>
-            <div data-dropdown-target="menu" class="hidden overflow-hidden absolute z-10 mt-3 w-screen max-w-xs bg-white rounded-3xl ring-1 shadow-lg ring-gray-900/5">
-              <div class="p-4">
-                <div class="flex relative gap-x-2 items-center p-4 leading-6 border-b-2 hover:bg-gray-50">
-                  <div class="flex-auto">
-                    <a href="{% url 'product_categories' %}" class="block font-semibold text-gray-900">
-                      All
-                      <span class="absolute inset-0"></span>
-                    </a>
-                  </div>
-                </div>
-
-                {% for category in "beverages,breads,condiments,dairy,fish,fruits,meats,nuts,oils,other,snacks,supplements,sweeteners,vegetables"|split:"," %}
-                <div class="flex relative gap-x-2 items-center p-4 leading-6 rounded-lg group hover:bg-gray-50">
-                  <div class="flex-auto">
-                    <a href="{% url 'product_category_list' category=category %}" class="block font-semibold text-gray-900">
-                      {{ category|title }}
-                      <span class="absolute inset-0"></span>
-                    </a>
-                  </div>
-                </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
+          <a href="{% url 'product_categories' %}" class="font-semibold leading-6 text-gray-900 hover:text-gray-600">Categories</a>
         </div>
 
         <div class="flex items-center space-x-4">
@@ -157,11 +127,7 @@
                 <div class="py-6 space-y-2">
                   <a href="{% url 'home' %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Home</a>
                   <a href="{% url 'products' %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Products</a>
-                  <div class="space-y-2">
-                    {% for category in "beverages,breads,condiments,dairy,fish,fruits,meats,nuts,oils,other,snacks,supplements,sweeteners,vegetables"|split:"," %}
-                    <a href="{% url 'product_category_list' category=category %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">{{ category|title }}</a>
-                    {% endfor %}
-                  </div>
+                  <a href="{% url 'product_categories' %}" class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Categories</a>
                 </div>
               </div>
             </div>
