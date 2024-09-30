@@ -24,16 +24,16 @@ from isitketo.sitemaps import sitemaps
 
 urlpatterns = (
     [
+        path("", include("core.urls")),
         path("admin/", admin.site.urls),
         path("accounts/", include("allauth.urls")),
-        path("", include("core.urls")),
+        path("privacy-policy/", TemplateView.as_view(template_name="pages/privacy-policy.html"), name="privacy"),
         path(
             "sitemap.xml",
             sitemap,
             {"sitemaps": sitemaps},
             name="django.contrib.sitemaps.views.sitemap",
         ),
-        path("privacy-policy", TemplateView.as_view(template_name="pages/privacy-policy.html"), name="privacy"),
         path("ads.txt", TemplateView.as_view(template_name="files/ads.txt", content_type="text/plain")),
         path("robots.txt", TemplateView.as_view(template_name="files/robots.txt", content_type="text/plain")),
     ]
