@@ -2,12 +2,12 @@
 
 <div class="overflow-hidden bg-white rounded-lg border shadow-md transition-transform duration-300 hover:scale-105">
   <a href="{% url 'product' product.slug %}" class="block pt-4">
-      {% if product.compressed_ai_generated_image or product.compressed_image %}
+      {% if product.compressed_image or product.compressed_ai_generated_image %}
           <div class="flex justify-center items-center mt-1 h-48">
-              {% if product.compressed_ai_generated_image %}
-                  <img src="{% get_media_prefix %}{{ product.compressed_ai_generated_image }}" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
-              {% else %}
+              {% if product.compressed_image %}
                   <img src="{% get_media_prefix %}{{ product.compressed_image }}" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
+              {% elif product.compressed_ai_generated_image %}
+                  <img src="{% get_media_prefix %}{{ product.compressed_ai_generated_image }}" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
               {% endif %}
           </div>
       {% else %}
@@ -15,9 +15,11 @@
               <span class="text-gray-500">No image available</span>
           </div>
       {% endif %}
+      {% if product.keto_meter_image_path %}
           <div class="flex justify-center items-center px-6 h-48">
               <img src="{{ product.keto_meter_image_path }}" alt="{{ product.name }}" class="object-contain max-w-full max-h-full">
           </div>
+      {% endif %}
   </a>
   <div class="p-4">
       <h2 class="mb-2 text-xl font-semibold">

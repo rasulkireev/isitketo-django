@@ -33,7 +33,7 @@ urlpatterns = (
             {"sitemaps": sitemaps},
             name="django.contrib.sitemaps.views.sitemap",
         ),
-        path("privacy-policy", TemplateView.as_view(template_name="pages/privacy-policy.html", name="privacy")),
+        path("privacy-policy", TemplateView.as_view(template_name="pages/privacy-policy.html"), name="privacy"),
         path("ads.txt", TemplateView.as_view(template_name="files/ads.txt", content_type="text/plain")),
         path("robots.txt", TemplateView.as_view(template_name="files/robots.txt", content_type="text/plain")),
     ]
