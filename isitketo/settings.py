@@ -199,8 +199,8 @@ ACCOUNT_FORMS = {
 
 Q_CLUSTER = {
     "name": "isitketo-q",
-    "timeout": 90,
-    "retry": 120,
+    "timeout": 120,
+    "retry": 150,
     "workers": 4,
     "max_attempts": 2,
     "redis": env("REDIS_URL"),
