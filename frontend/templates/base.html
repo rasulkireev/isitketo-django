@@ -82,6 +82,7 @@
             class="hidden relative lg:block"
           >
             <form data-action="submit->search#performSearch">
+              {% csrf_token %}
               <input
                 type="text"
                 data-search-target="input"

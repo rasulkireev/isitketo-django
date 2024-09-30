@@ -88,7 +88,7 @@
           "url": "{% url 'product' product.slug %}",
           "description": "{{ product.short_description|default:''|escapejs }}",
           "review": "{{ product.full_description|default:''|escapejs }}",
-          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% endif %}"
+          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% endif %}",
           "aggregateRating": {{ product.rating }}
         }
       }{% if not forloop.last %},{% endif %}

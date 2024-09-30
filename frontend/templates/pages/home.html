@@ -10,6 +10,7 @@
     class="relative"
   >
     <form data-action="submit->search#performSearch" class="relative">
+      {% csrf_token %}
       <div>
         <label for="keto-search" class="block mb-2">Search for food or product</label>
         <div class="relative">
