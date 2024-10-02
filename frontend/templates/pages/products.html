@@ -83,9 +83,19 @@
           "name": "{{ product.name }}",
           "url": "{% url 'product' product.slug %}",
           "description": "{{ product.short_description|default:''|escapejs }}",
-          "review": "{{ product.full_description|default:''|escapejs }}",
-          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% endif %}",
-          "aggregateRating": {{ product.rating }}
+          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% elif product.ai_generated_image %}https://{{ request.get_host }}{{ product.ai_generated_image.url }}{% endif %}",
+          "review": {
+            "@type": "Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": {{ product.rating }},
+              "bestRating": 5
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Rasul Kireev"
+            }
+          },
         }
       }{% if not forloop.last %},{% endif %}
       {% endfor %}
