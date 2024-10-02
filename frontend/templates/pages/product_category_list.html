@@ -83,31 +83,41 @@
         "@type": "ListItem",
         "position": {{ forloop.counter }},
         "item": {
-          "@type": "Product",
-          "name": "{{ product.name }}",
-          "url": "{% url 'product' product.slug %}",
+          "@type": "Article",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ request.scheme }}://{{ request.get_host }}{% url 'product' product.slug %}"
+          },
+          "headline": "{% if product.has_plural_title %}Are{% else %}Is{% endif %} {{ product.name }} Keto Friendly?",
           "description": "{{ product.short_description|default:''|escapejs }}",
-          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% elif product.ai_generated_image %}https://{{ request.get_host }}{{ product.ai_generated_image.url }}{% endif %}",
-          "review": {
-            "@type": "Review",
-            "reviewRating": {
-              "@type": "Rating",
-              "ratingValue": {{ product.rating }},
-              "bestRating": 5
-            },
-            "author": {
-              "@type": "Person",
-              "name": "Rasul Kireev"
+          "image": "{% if product.image %}{{ product.image.url }}{% elif product.ai_generated_image %}{{ product.ai_generated_image.url }}{% endif %}",
+          "datePublished": "{{ product.created_at|date:'c' }}",
+          "dateModified": "{{ product.updated_at|date:'c' }}",
+          "author": {
+            "@type": "Organization",
+            "name": "Is It Keto",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{% static 'vendors/images/logo.png' %}"
             }
           },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Is It Keto",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{% static 'vendors/images/logo.png' %}"
+            }
+          },
+          "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'product' product.slug %}"
         }
       }{% if not forloop.last %},{% endif %}
       {% endfor %}
     ]
   },
-  "name": "Keto Friendly {{ category|title }} ",
-  "description": "Find out which products are keto-friendly in {{ category|title }} cateogry.",
-  "url": "https://{{ request.get_host }}{{ request.path }}",
+  "name": "Keto Friendly {{ category|title }} Products",
+  "description": "Find out which {{ category|title }} products are keto-friendly in our collection of articles.",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}",
   "publisher": {
     "@type": "Organization",
     "name": "Is It Keto",
@@ -123,12 +133,12 @@
       "@type": "ListItem",
       "position": 1,
       "name": "{{ category|title }}",
-      "item": "https://{{ request.get_host }}{{ request.path }}"
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
     }, {
       "@type": "ListItem",
       "position": 2,
       "name": "Page {{ page_obj.number }}",
-      "item": "https://{{ request.get_host }}{{ request.path }}?page={{ page_obj.number }}"
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}?page={{ page_obj.number }}"
     }]
   }
   {% endif %}

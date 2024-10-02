@@ -111,7 +111,7 @@
       "@type": "WebPage",
       "@id": "https://{{ request.get_host }}/{{ object.slug }}"
     },
-    "image": "{% get_media_prefix %}{{ object.image }}",
+    "image": "{% if object.image %}{{ object.image.url }}{% elif object.ai_generated_image %}{{ object.ai_generated_image.url }}{% endif %}",
     "datePublished": "{{ object.created_at }}",
     "dateModified": "{{ object.updated_at }}",
     "author": {

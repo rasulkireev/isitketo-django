@@ -79,30 +79,40 @@
         "@type": "ListItem",
         "position": {{ forloop.counter }},
         "item": {
-          "@type": "Product",
-          "name": "{{ product.name }}",
+          "@type": "Article",
+          "headline": "{% if product.has_plural_title %}Are{% else %}Is{% endif %} {{ product.name }} Keto Friendly?",
           "url": "{% url 'product' product.slug %}",
           "description": "{{ product.short_description|default:''|escapejs }}",
-          "image": "{% if product.image %}https://{{ request.get_host }}{{ product.image.url }}{% elif product.ai_generated_image %}https://{{ request.get_host }}{{ product.ai_generated_image.url }}{% endif %}",
-          "review": {
-            "@type": "Review",
-            "reviewRating": {
-              "@type": "Rating",
-              "ratingValue": {{ product.rating }},
-              "bestRating": 5
-            },
-            "author": {
-              "@type": "Person",
-              "name": "Rasul Kireev"
+          "image": "{% if product.image %}{{ product.image.url }}{% elif product.ai_generated_image %}{{ product.ai_generated_image.url }}{% endif %}",
+          "datePublished": "{{ product.created_at|date:'c' }}",
+          "dateModified": "{{ product.updated_at|date:'c' }}",
+          "author": {
+            "@type": "Organization",
+            "name": "Is It Keto",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{% static 'vendors/images/logo.png' %}"
             }
           },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Is It Keto",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{% static 'vendors/images/logo.png' %}"
+            }
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://{{ request.get_host }}{% url 'product' product.slug %}"
+          }
         }
       }{% if not forloop.last %},{% endif %}
       {% endfor %}
     ]
   },
-  "name": "All Keto-Friendly Products",
-  "description": "Explore our complete collection of keto-friendly products across all categories.",
+  "name": "All Keto-Friendly Product Articles",
+  "description": "Explore our complete collection of articles about keto-friendly products across all categories.",
   "url": "https://{{ request.get_host }}{{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}",
   "publisher": {
     "@type": "Organization",
