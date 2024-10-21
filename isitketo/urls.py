@@ -36,6 +36,7 @@ urlpatterns = (
         ),
         path("ads.txt", TemplateView.as_view(template_name="files/ads.txt", content_type="text/plain")),
         path("robots.txt", TemplateView.as_view(template_name="files/robots.txt", content_type="text/plain")),
+        path("uses/", TemplateView.as_view(template_name="pages/uses.html"), name="uses"),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
