@@ -27,7 +27,7 @@
 <div class="container px-4 py-8 mx-auto">
     <h1 class="mb-8 text-3xl font-bold text-center text-gray-800">Browse Foods by Category</h1>
 
-    {% include "components/ads.html" %}
+    {% include "components/display-ad.html" %}
 
     <div class="space-y-12">
         {% for category_data in categories %}
@@ -43,8 +43,11 @@
                     {% endfor %}
                 </div>
                 <div class="flex justify-center">
-                  <a class="px-3 py-2 text-lg font-semibold text-blue-600 bg-blue-50 rounded-md shadow-sm hover:bg-blue-100" href="{% url 'product_category_list' category_data.category %}">View More</a>
+                  <a class="px-3 py-2 text-lg font-semibold text-blue-600 bg-blue-50 rounded-md shadow-sm hover:bg-blue-100" href="{% url 'product_category_list' category_data.category %}">
+                    View More
+                  </a>
                 </div>
+                {% include "components/display-ad.html" %}
             </div>
         {% empty %}
             <p class="italic text-center text-gray-500">No categories found.</p>
