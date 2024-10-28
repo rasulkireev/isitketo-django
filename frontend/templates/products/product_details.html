@@ -27,7 +27,6 @@
 {% block content %}
 <div class="px-4 py-12 mx-auto max-w-4xl sm:px-6 lg:px-8">
   {% include "components/breadcrumbs.html" with object=object %}
-  {% include "components/display-ad.html" %}
 
   <h1 class="my-8 text-4xl font-extrabold text-center text-gray-900 sm:text-6xl">
     {% if object.has_plural_title %}Are{% else %}Is{% endif %} {{ object.name }} Keto Friendly?
