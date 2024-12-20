@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import DetailView, ListView, TemplateView
 from django_q.tasks import async_task
 
-from core.models import Product, Tag
+from core.models import BlogPost, Product, Tag
 from core.tasks import schedule_products_creation
 from isitketo.utils import get_isitketo_logger
 
@@ -223,3 +223,15 @@ def newsletter_signup(request):
         else:
             return JsonResponse({"success": False, "message": "Email is required."})
     return render(request, "newsletter_signup.html")
+
+
+class BlogView(ListView):
+    model = BlogPost
+    template_name = "blog/blog_posts.html"
+    context_object_name = "blog_posts"
+
+
+class BlogPostView(DetailView):
+    model = BlogPost
+    template_name = "blog/blog_post.html"
+    context_object_name = "blog_post"
