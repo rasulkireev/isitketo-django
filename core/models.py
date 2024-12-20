@@ -46,3 +46,19 @@ class Tag(BaseModel):
 class ProductTag(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+
+
+class BlogPost(BaseModel):
+    title = models.CharField(max_length=250)
+    description = models.TextField(blank=True)
+    slug = models.SlugField(max_length=250)
+    tags = models.TextField()
+    content = models.TextField()
+    icon = models.ImageField(upload_to="blog_post_icons/", blank=True)
+    image = models.ImageField(upload_to="blog_post_images/", blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("blog_post", kwargs={"slug": self.slug})

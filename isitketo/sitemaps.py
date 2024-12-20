@@ -2,7 +2,7 @@ from django.contrib import sitemaps
 from django.contrib.sitemaps import GenericSitemap
 from django.urls import reverse
 
-from core.models import Product
+from core.models import BlogPost, Product
 
 
 class StaticViewSitemap(sitemaps.Sitemap):
@@ -21,6 +21,7 @@ class StaticViewSitemap(sitemaps.Sitemap):
             "home",
             "products",
             "product_categories",
+            "blog_posts",
         ]
 
     def location(self, item):
@@ -58,4 +59,9 @@ sitemaps = {
         protocol="https",
     ),
     "product_categories": ProductCategoriesSitemap,
+    "blog": GenericSitemap(
+        {"queryset": BlogPost.objects.all(), "date_field": "created_at"},
+        priority=0.85,
+        protocol="https",
+    ),
 }
