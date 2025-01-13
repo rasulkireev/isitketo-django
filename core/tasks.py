@@ -29,14 +29,30 @@ fatsecret_client = FatSecretClient(
 def schedule_products_creation(product_name: str):
     logger.info("Scheduling Products Creation", product_name=product_name)
 
-    results = fatsecret_client.search(product_name)
-    count = 0
-    for result in results:
-        food_id = result.get("food_id", "")
-        async_task(create_product, food_id)
-        count += 1
+    try:
+        results = fatsecret_client.search(product_name)
+        if not results:
+            logger.warning("No products found for search query", product_name=product_name)
+            return f"No products found for '{product_name}'"
 
-    return f"Scheduled {count} products to get created for '{product_name}' query."
+        count = 0
+        for result in results:
+            food_id = result.get("food_id")
+            if not food_id:
+                logger.warning("Skipping product with no food_id", product_data=result)
+                continue
+
+            async_task(create_product, food_id)
+            count += 1
+
+        logger.info("Successfully scheduled products creation", product_name=product_name, products_count=count)
+        return f"Scheduled {count} products to get created for '{product_name}' query."
+
+    except Exception as e:
+        logger.error(
+            "Failed to schedule products creation", error=str(e), error_type=type(e).__name__, product_name=product_name
+        )
+        raise
 
 
 def create_product(food_id):
