@@ -42,13 +42,11 @@ def generate_food_image(food_item, style="realistic", size="medium"):
     input_data = {
         "prompt": prompt,
         "negative_prompt": "cartoon, illustration, low quality, blurry, text, watermark",
-        "num_inference_steps": 50,  # Increase for potentially better quality
-        "guidance_scale": 7.5,  # Adjust for creativity vs. prompt adherence
     }
 
     try:
         # Run the model
-        output = replicate.run("black-forest-labs/flux-pro", input=input_data)
+        output = replicate.run("black-forest-labs/flux-1.1-pro", input=input_data)
 
         # The output is expected to be a URL to the generated image
         return output
