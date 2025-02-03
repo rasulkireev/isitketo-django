@@ -143,13 +143,16 @@ class FatSecretClient:
 
             if "foods" not in data:
                 logger.warning(
-                    "[FatSecret] Missing 'foods' key in response", query=query, available_keys=list(data.keys())
+                    "[FatSecret] Missing 'foods' key in response",
+                    query=query,
+                    available_keys=list(data.keys()),
+                    response_text=data,
                 )
                 return []
 
             foods_data = data["foods"]
             if "food" not in foods_data:
-                logger.warning("[FatSecret] No food results found", query=query)
+                logger.warning("[FatSecret] No food results found", query=query, response_text=data)
                 return []
 
             results = foods_data["food"]
