@@ -25,7 +25,10 @@
 {% endblock meta %}
 
 {% block content %}
-<article class="container px-4 py-8 mx-auto md:relative">
+<div id="TA_AD_CONTAINER">
+  <!-- It will be replaced with an ad -->
+</div>
+<article class="container px-4 py-8 mx-auto mt-6 md:relative">
   <div class="mx-auto max-w-3xl">
     <h1 class="mb-6 text-3xl font-bold">{{ blog_post.title }}</h1>
 
@@ -34,7 +37,6 @@
     </div>
   </div>
 </article>
-{% include "components/display-ad.html" %}
 {% endblock content %}
 
 {% block schema %}

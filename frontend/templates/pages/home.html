@@ -3,6 +3,9 @@
 
 {% block content %}
 <div class="mx-auto mt-16 max-w-2xl">
+  <div class="my-3" id="TA_AD_CONTAINER">
+    <!-- It will be replaced with an ad -->
+  </div>
   <div
     data-controller="search"
     data-search-url-value="{% url 'search_products' %}"
@@ -60,7 +63,6 @@
   </div>
 </div>
 
-{% include "components/display-ad.html" %}
 {% include "components/newsletter.html" %}
 
 {% endblock content %}
