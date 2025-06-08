@@ -50,6 +50,11 @@ class ProductCategoriesSitemap(sitemaps.Sitemap):
 
 sitemaps = {
     "static": StaticViewSitemap,
+    "blog": GenericSitemap(
+        {"queryset": BlogPost.objects.all(), "date_field": "created_at"},
+        priority=0.95,
+        protocol="https",
+    ),
     "products": GenericSitemap(
         {
             "queryset": Product.objects.all(),
@@ -59,9 +64,4 @@ sitemaps = {
         protocol="https",
     ),
     "product_categories": ProductCategoriesSitemap,
-    "blog": GenericSitemap(
-        {"queryset": BlogPost.objects.all(), "date_field": "created_at"},
-        priority=0.85,
-        protocol="https",
-    ),
 }
