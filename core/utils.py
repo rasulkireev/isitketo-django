@@ -45,7 +45,7 @@ def guess_food_category(food_name):
 Please categorize the food item "{food_name}" into one of these categories. Respond with only the category name, nothing else."""
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=1000,
         temperature=0,
         system="You are a world-class Nutritionist.",
@@ -75,7 +75,7 @@ def generate_tags_for_food(food_name: str) -> List[str]:
     Limit the response to 10 tags maximum."""
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=1000,
         temperature=0.2,
         system="You are a culinary expert with extensive knowledge of food characteristics and classifications.",
@@ -97,7 +97,7 @@ def is_food_name_plural(food_name: str) -> bool:
     Respond with only "True" if it's typically plural, or "False" if it's typically singular or a mass noun. Provide no other text."""
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=1000,
         temperature=0,
         system="You are a linguistic expert specializing in food terminology.",
@@ -140,7 +140,7 @@ Consider the following factors:
 Provide only a single number (1, 2, 3, 4, or 5) as your response, with no additional explanation."""
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=1000,
         temperature=0,
         system="You are a nutritionist specializing in ketogenic diets.",
@@ -164,7 +164,7 @@ def is_food_keto_friendly_short_answer(food_name: str) -> str:
     Your response should be informative yet brief, not exceeding 250 characters."""
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=1000,
         temperature=0.2,
         system="You are a nutritionist specializing in ketogenic diets. Provide concise, accurate information about food items' compatibility with a keto diet.",
@@ -218,7 +218,7 @@ def get_detailed_keto_description(food_name: str, macros: Dict[str, str]) -> str
     logger.info(f"Generating detailed keto description for: {food_name}")
 
     message = anthropic_client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-20250514",
         max_tokens=2000,
         temperature=0.2,
         system="You are a nutritionist and keto diet expert. Provide accurate, detailed information about food items and their compatibility with a ketogenic diet, based on the provided nutritional data.",
