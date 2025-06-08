@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import environ
+import logfire
 import sentry_sdk
 import structlog
 
@@ -26,6 +27,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 ENVIRONMENT = env("ENVIRONMENT")
+logfire.configure(environment=ENVIRONMENT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -257,6 +259,7 @@ structlog.configure(
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
         structlog.stdlib.PositionalArgumentsFormatter(),
+        logfire.StructlogProcessor(),
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
@@ -287,3 +290,5 @@ FAT_SECRET_CLIENT_SECRET = env("FAT_SECRET_CLIENT_SECRET")
 ANTHROPIC_API_KEY = env("ANTHROPIC_API_KEY")
 REPLICATE_API_KEY = env("REPLICATE_API_KEY")
 BUTTONDOWN_API_TOKEN = env("BUTTONDOWN_API_TOKEN")
+
+SECRET_API_TOKEN = env("SECRET_API_TOKEN")
