@@ -14,7 +14,8 @@ import os
 from pathlib import Path
 
 import environ
-import logfire
+
+# import logfire
 import sentry_sdk
 import structlog
 
@@ -27,7 +28,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 ENVIRONMENT = env("ENVIRONMENT")
-logfire.configure(environment=ENVIRONMENT)
+# logfire.configure(environment=ENVIRONMENT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -248,6 +249,11 @@ LOGGING = {
             "handlers": ["console"],
             "propagate": False,
         },
+        "django-q": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": False,
+        },
     },
 }
 
@@ -259,7 +265,7 @@ structlog.configure(
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
         structlog.stdlib.PositionalArgumentsFormatter(),
-        logfire.StructlogProcessor(),
+        # logfire.StructlogProcessor(),
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
@@ -269,10 +275,13 @@ structlog.configure(
     cache_logger_on_first_use=True,
 )
 
+log_level = env("DJANGO_LOG_LEVEL", default="INFO")
 if ENVIRONMENT == "prod":
-    LOGGING["loggers"]["isitketo"]["level"] = env("DJANGO_LOG_LEVEL", default="INFO")
-    LOGGING["loggers"]["isitketo"]["handlers"] = ["json_console"]
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
+    LOGGING["loggers"]["isitketo"]["level"] = log_level
+    LOGGING["loggers"]["isitketo"]["handlers"] = ["json_console"]
+    LOGGING["loggers"]["django-q"]["handlers"] = ["json_console"]
+    LOGGING["loggers"]["django-q"]["level"] = log_level
 
     CACHES = {
         "default": {
