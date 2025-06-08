@@ -25,6 +25,7 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
             tags=data.tags,
             content=data.content,
         )
+        logger.info("Blog post submitted successfully.", user=user.username, blog_post=data.title)
         return BlogPostOut(status="success", message="Blog post submitted successfully.")
     except Exception as e:
         return BlogPostOut(status="error", message=f"Failed to submit blog post: {str(e)}")

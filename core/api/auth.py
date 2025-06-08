@@ -1,22 +1,23 @@
+import secrets
 from typing import Optional
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from ninja.security import HttpBearer
 
 
 class MultipleAuthSchema(HttpBearer):
-    def authenticate(self, request: HttpRequest, token: Optional[str] = None) -> Optional[User]:
+    def authenticate(self, request: HttpRequest, token: Optional[str] = None):
         if hasattr(request, "user") and request.user.is_authenticated:
             try:
                 return request.user
-            except User.DoesNotExist:
+            except get_user_model().DoesNotExist:
                 return None
 
         # For API token authentication (when using the API directly)
-        if token == settings.SECRET_API_TOKEN:
-            return User.objects.get(id=1)
+        if secrets.compare_digest(token or "", settings.SECRET_API_TOKEN):
+            return get_user_model().objects.filter(is_superuser=True).first()
 
         return None
 
