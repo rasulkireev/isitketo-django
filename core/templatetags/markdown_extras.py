@@ -14,3 +14,9 @@ def markdown(value):
     html = md_instance.convert(value)
 
     return mark_safe(html)
+
+
+@register.filter
+@stringfilter
+def replace_quotes(value):
+    return value.replace('"', "'")
