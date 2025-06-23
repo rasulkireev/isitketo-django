@@ -261,7 +261,7 @@ def generate_keto_keyword_for_search() -> str:
     - Only return 1 keyword, no other text.
 """
     try:
-        response = anthropic_client.messages.create(
+        message = anthropic_client.messages.create(
             model="claude-sonnet-4-20250514",
             messages=[{"content": prompt, "role": "user"}],
             system="""
@@ -269,7 +269,7 @@ def generate_keto_keyword_for_search() -> str:
                 database with strong knowledge of the ketogenic diet.
             """,
         )
-        keyword = response.choices[0].message.content.strip().replace('"', "")
+        keyword = message.content[0].text.strip().replace('"', "")
         logger.info("Generated keyword", keyword=keyword)
         return keyword
     except Exception:
