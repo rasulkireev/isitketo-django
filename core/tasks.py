@@ -9,6 +9,7 @@ from django_q.tasks import async_task
 from core.image_utils import compress_image, generate_food_image
 from core.models import Product, ProductTag, Tag
 from core.utils import (
+    generate_keto_keyword_for_search,
     generate_tags_for_food,
     get_detailed_keto_description,
     guess_food_category,
@@ -53,6 +54,16 @@ def schedule_products_creation(product_name: str):
             "Failed to schedule products creation", error=str(e), error_type=type(e).__name__, product_name=product_name
         )
         raise
+
+
+def schedule_keyword_search_and_product_creation():
+    logger.info("Scheduling Keyword Search and Product Creation")
+    keyword = generate_keto_keyword_for_search()
+    if keyword:
+        logger.info("Generated keyword, scheduling product creation", keyword=keyword)
+        schedule_products_creation(keyword)
+    else:
+        logger.error("Failed to generate a keyword.")
 
 
 def create_product(food_id):
