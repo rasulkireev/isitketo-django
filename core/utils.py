@@ -230,3 +230,48 @@ def get_detailed_keto_description(food_name: str, macros: Dict[str, str]) -> str
     logger.info(f"Generated detailed keto description for {food_name}")
 
     return response
+
+
+def generate_keto_keyword_for_search() -> str:
+    prompt = """
+    - Generate a single, creative, short keyword for searching a food database.
+    - The keyword should be related to the ketogenic diet, but can be abstract or unusual.
+    - The goal is to discover new and interesting foods.
+    - The keyword should be a single word or a very short phrase.
+
+    ---
+
+    Here are some examples of good keywords:
+    - popcorn
+    - healthy
+    - fiber
+    - bean
+    - low sugar
+    - quest
+    - atkins
+    - high-fat
+    - fermented
+    - gluten-free
+    - sugar-free
+    - snack
+
+    ---
+
+    - The keyword should not be enclosed in quotes.
+    - Only return 1 keyword, no other text.
+"""
+    try:
+        response = anthropic_client.messages.create(
+            model="claude-sonnet-4-20250514",
+            messages=[{"content": prompt, "role": "user"}],
+            system="""
+                You are a world-class keyword generator for searching a food
+                database with strong knowledge of the ketogenic diet.
+            """,
+        )
+        keyword = response.choices[0].message.content.strip().replace('"', "")
+        logger.info("Generated keyword", keyword=keyword)
+        return keyword
+    except Exception:
+        logger.error("Error generating keto keyword", exc_info=True)
+        return "keto"
