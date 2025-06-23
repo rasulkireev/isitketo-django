@@ -65,6 +65,8 @@ def schedule_keyword_search_and_product_creation():
     else:
         logger.error("Failed to generate a keyword.")
 
+    return f"Scheduled keyword search and product creation for keyword: {keyword}"
+
 
 def create_product(food_id):
     logger.info("Creating Product", food_id=food_id)
