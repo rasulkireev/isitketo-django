@@ -266,6 +266,7 @@ def generate_keto_keyword_for_search() -> str:
     ## Instructions
     - The keyword should not be enclosed in quotes.
     - Only return 1 keyword, no other text.
+    - SUPER IMPORTANT: The keyword must not be the word "keto".
 """
     try:
         message = anthropic_client.messages.create(
