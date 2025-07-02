@@ -62,3 +62,10 @@ class BlogPost(BaseModel):
 
     def get_absolute_url(self):
         return reverse("blog_post", kwargs={"slug": self.slug})
+
+
+class GeneratedKeywords(BaseModel):
+    keyword = models.CharField(max_length=250, unique=True)
+
+    def __str__(self):
+        return self.keyword
