@@ -268,22 +268,22 @@ def generate_keto_keyword_for_search() -> str:
     - Only return 1 keyword, no other text.
     - SUPER IMPORTANT: The keyword must not be the word "keto".
 """
-    try:
-        message = anthropic_client.messages.create(
-            model="claude-sonnet-4-20250514",
-            messages=[{"content": prompt, "role": "user"}],
-            system="""
-                You are a world-class keyword generator for searching a food
-                database with strong knowledge of the ketogenic diet.
-            """,
-        )
-        keyword = message.content[0].text.strip().replace('"', "")
-        logger.info("Generated keyword", keyword=keyword)
-        GeneratedKeywords.objects.create(keyword=keyword)
-        return keyword
-    except Exception:
-        logger.error("Error generating keto keyword", exc_info=True)
-        return "keto"
+    message = anthropic_client.messages.create(
+        model="claude-sonnet-4-20250514",
+        messages=[{"content": prompt, "role": "user"}],
+        max_tokens=1024,
+        system="""
+            You are a world-class keyword generator for searching a food
+            database with strong knowledge of the ketogenic diet.
+        """,
+    )
+    keyword = message.content[0].text.strip().replace('"', "")
+
+    logger.info("Generated keyword", keyword=keyword)
+
+    GeneratedKeywords.objects.create(keyword=keyword)
+
+    return keyword
 
 
 def ping_healthchecks(ping_id):
