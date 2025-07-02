@@ -15,6 +15,7 @@ from core.utils import (
     guess_food_category,
     is_food_keto_friendly_short_answer,
     is_food_name_plural,
+    ping_healthchecks,
     rate_food_for_keto,
 )
 from integrations.fatsecret import FatSecretClient
@@ -64,6 +65,8 @@ def schedule_keyword_search_and_product_creation():
         schedule_products_creation(keyword)
     else:
         logger.error("Failed to generate a keyword.")
+
+    ping_healthchecks("0dcb32cb-bb66-485a-a678-834a31431936")
 
     return f"Scheduled keyword search and product creation for keyword: {keyword}"
 

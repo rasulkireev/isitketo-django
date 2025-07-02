@@ -1,10 +1,11 @@
 from typing import Dict, List
-
+import requests
 import anthropic
 from django.conf import settings
 from django.forms.utils import ErrorList
 
 from core.choices import FoodCategory
+from core.models import GeneratedKeywords
 from isitketo.utils import get_isitketo_logger
 
 logger = get_isitketo_logger(__name__)
@@ -233,13 +234,14 @@ def get_detailed_keto_description(food_name: str, macros: Dict[str, str]) -> str
 
 
 def generate_keto_keyword_for_search() -> str:
-    prompt = """
+    prompt = f"""
+    ## Requirements
     - Generate a single, creative, short keyword for searching a food database.
     - The keyword should be related to the ketogenic diet, but can be abstract or unusual.
     - The goal is to discover new and interesting foods.
     - The keyword should be a single word or a very short phrase.
 
-    ---
+    ## Examples
 
     Here are some examples of good keywords:
     - popcorn
@@ -255,8 +257,13 @@ def generate_keto_keyword_for_search() -> str:
     - sugar-free
     - snack
 
-    ---
+    ## Existing Keywords
+    Here are some keywords that have already been generated:
+    {', '.join(list(GeneratedKeywords.objects.all().values_list("keyword", flat=True)))}
 
+    IMPORTANT: Don't generate keywords that have already been generated.
+
+    ## Instructions
     - The keyword should not be enclosed in quotes.
     - Only return 1 keyword, no other text.
 """
@@ -271,7 +278,15 @@ def generate_keto_keyword_for_search() -> str:
         )
         keyword = message.content[0].text.strip().replace('"', "")
         logger.info("Generated keyword", keyword=keyword)
+        GeneratedKeywords.objects.create(keyword=keyword)
         return keyword
     except Exception:
         logger.error("Error generating keto keyword", exc_info=True)
         return "keto"
+
+
+def ping_healthchecks(ping_id):
+    try:
+        requests.get(f"https://healthchecks.cr.lvtd.dev/ping/{ping_id}", timeout=10)
+    except requests.RequestException:
+        logger.error("Ping failed", exc_info=True)
