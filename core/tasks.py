@@ -62,7 +62,7 @@ def schedule_keyword_search_and_product_creation():
     keyword = generate_keto_keyword_for_search()
     if keyword:
         logger.info("Generated keyword, scheduling product creation", keyword=keyword)
-        schedule_products_creation(keyword)
+        async_task(schedule_products_creation, keyword)
     else:
         logger.error("Failed to generate a keyword.")
 
