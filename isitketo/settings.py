@@ -28,7 +28,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 ENVIRONMENT = env("ENVIRONMENT")
-logfire.configure(environment=ENVIRONMENT)
+logfire.configure(environment=ENVIRONMENT, console=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
