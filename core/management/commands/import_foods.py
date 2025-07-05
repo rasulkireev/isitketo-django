@@ -40,6 +40,33 @@ class Command(BaseCommand):
                 # Parse the frontmatter
                 data = yaml.safe_load(frontmatter)
 
+                # Extract macro information from USDA data if available
+                usda_info = data.get("usda_info", {})
+                usda_multiplier = data.get("usda_multiplier", 1.0)
+                
+                # Calculate macro values with multiplier
+                calories = None
+                protein = None
+                fat = None
+                carbohydrates = None
+                fiber = None
+                sodium = None
+                
+                if usda_info:
+                    if "calories" in usda_info and usda_info["calories"]:
+                        calories = float(usda_info["calories"]) * usda_multiplier
+                    if "protein" in usda_info and usda_info["protein"]:
+                        protein = float(usda_info["protein"]) * usda_multiplier
+                    if "fat" in usda_info and usda_info["fat"]:
+                        fat = float(usda_info["fat"]) * usda_multiplier
+                    if "carbs" in usda_info and usda_info["carbs"]:
+                        carbohydrates = float(usda_info["carbs"]) * usda_multiplier
+                    if "fiber" in usda_info and usda_info["fiber"]:
+                        fiber = float(usda_info["fiber"]) * usda_multiplier
+                    if "sodium" in usda_info and usda_info["sodium"]:
+                        # USDA sodium is usually in grams, convert to mg
+                        sodium = float(usda_info["sodium"]) * usda_multiplier * 1000
+
                 # Create or update the Product
                 product, created = Product.objects.update_or_create(
                     name=data["name"],
@@ -59,6 +86,14 @@ class Command(BaseCommand):
                             "last_modified_time": data.get("last_modified_time"),
                             "has_affiliate_links": data.get("has_affiliate_links", False),
                         },
+                        # Add macro fields
+                        "serving_description": data.get("serving_size_formatted", ""),
+                        "calories": calories,
+                        "protein": protein,
+                        "fat": fat,
+                        "carbohydrates": carbohydrates,
+                        "fiber": fiber,
+                        "sodium": sodium,
                     },
                 )
 

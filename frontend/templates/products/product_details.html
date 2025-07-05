@@ -69,6 +69,82 @@
       >
     </div>
 
+    <!-- Nutritional Information Table -->
+    {% if object.calories or object.protein or object.fat or object.carbohydrates or object.fiber %}
+    <div class="mb-8">
+      <h2 class="mb-4 text-2xl font-bold text-gray-900">Nutritional Information</h2>
+      {% if object.serving_description %}
+        <p class="mb-4 text-gray-600">Per {{ object.serving_description }}</p>
+      {% endif %}
+      <div class="overflow-hidden bg-white rounded-lg border shadow-sm">
+        <table class="w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nutrient</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% if object.calories %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Calories</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.calories }} kcal</td>
+            </tr>
+            {% endif %}
+            {% if object.protein %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Protein</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.protein }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.fat %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total Fat</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.fat }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.saturated_fat %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 pl-12">Saturated Fat</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.saturated_fat }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.carbohydrates %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total Carbohydrates</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.carbohydrates }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.fiber %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 pl-12">Dietary Fiber</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.fiber }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.sugar %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 pl-12">Sugars</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.sugar }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.carbohydrates and object.fiber %}
+            <tr class="bg-yellow-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">Net Carbs</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ object.net_carbs }}g</td>
+            </tr>
+            {% endif %}
+            {% if object.sodium %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sodium</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ object.sodium }}mg</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
     <div class="mb-8 max-w-none prose prose-lg">
       {{ object.full_description | markdown | safe }}
     </div>
