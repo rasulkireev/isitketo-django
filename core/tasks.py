@@ -106,6 +106,11 @@ def create_product(food_id):
     )
 
     try:
+        # Extract serving description
+        serving_description = macros.get("serving_description", "")
+        if macros.get("metric_serving_amount") and macros.get("metric_serving_unit"):
+            serving_description += f" ({macros.get('metric_serving_amount')} {macros.get('metric_serving_unit')})"
+
         product = Product.objects.create(
             name=product_name,
             slug=slug,
@@ -115,6 +120,16 @@ def create_product(food_id):
             short_description=short_description,
             full_description=full_description,
             data=product_info,
+            # Add macro fields
+            serving_description=serving_description,
+            calories=macros.get('calories'),
+            protein=macros.get('protein'),
+            fat=macros.get('fat'),
+            carbohydrates=macros.get('carbohydrate'),  # Note: API uses 'carbohydrate' not 'carbohydrates'
+            fiber=macros.get('fiber'),
+            sugar=macros.get('sugar'),
+            saturated_fat=macros.get('saturated_fat'),
+            sodium=macros.get('sodium'),
         )
     except IntegrityError:
         logger.warning("IntegrityError while creating product", slug=slug)
