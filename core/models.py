@@ -28,6 +28,17 @@ class Product(BaseModel):
     short_description = models.CharField(max_length=350)
     full_description = models.TextField()
 
+    # Macro/Nutritional Information
+    serving_description = models.CharField(max_length=100, blank=True)
+    calories = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    protein = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    fat = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    carbohydrates = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    fiber = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    sugar = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    saturated_fat = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    sodium = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+
     def __str__(self):
         return self.name
 
@@ -37,6 +48,13 @@ class Product(BaseModel):
     @property
     def keto_meter_image_path(self):
         return f"/static/vendors/images/keto-meter-{self.rating}.png"
+
+    @property
+    def net_carbs(self):
+        """Calculate net carbs (total carbs - fiber)"""
+        if self.carbohydrates is not None and self.fiber is not None:
+            return self.carbohydrates - self.fiber
+        return self.carbohydrates
 
 
 class Tag(BaseModel):
