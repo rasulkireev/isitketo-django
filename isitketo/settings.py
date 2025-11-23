@@ -360,7 +360,7 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["isitketo"]["level"] = env("DJANGO_LOG_LEVEL", default="INFO")
     LOGGING["loggers"]["isitketo"]["handlers"].append("json_console")
 
-if SENTRY_DSN:
+if SENTRY_DSN and ENVIRONMENT == "prod":
     Q_CLUSTER["error_reporter"]["sentry"] = {"dsn": SENTRY_DSN}
     sentry_sdk.init(
         debug=DEBUG,
