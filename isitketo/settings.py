@@ -389,3 +389,8 @@ REPLICATE_API_KEY = env("REPLICATE_API_KEY")
 BUTTONDOWN_API_TOKEN = env("BUTTONDOWN_API_TOKEN")
 
 SECRET_API_TOKEN = env("SECRET_API_TOKEN")
+
+# Public ownership proof, independent of private application credentials.
+SITE_URL = "https://isitketo.org"
+INDEXNOW_KEY = (BASE_DIR / "indexnow-key.txt").read_text(encoding="utf-8").strip()
+DEPLOYMENT_REVISION = os.environ.get("DEPLOYMENT_REVISION", "")

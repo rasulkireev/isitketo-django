@@ -20,10 +20,12 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from isitketo.indexnow_views import indexnow_key
 from isitketo.sitemaps import sitemaps
 
 urlpatterns = (
     [
+        path("indexnow-key.txt", indexnow_key, name="indexnow_key"),
         path("", include("core.urls")),
         path("admin/", admin.site.urls),
         path("accounts/", include("allauth.urls")),
