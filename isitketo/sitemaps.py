@@ -51,14 +51,14 @@ class ProductCategoriesSitemap(sitemaps.Sitemap):
 sitemaps = {
     "static": StaticViewSitemap,
     "blog": GenericSitemap(
-        {"queryset": BlogPost.objects.all(), "date_field": "created_at"},
+        {"queryset": BlogPost.objects.order_by("pk"), "date_field": "updated_at"},
         priority=0.95,
         protocol="https",
     ),
     "products": GenericSitemap(
         {
-            "queryset": Product.objects.all(),
-            "date_field": "created_at",
+            "queryset": Product.objects.order_by("pk"),
+            "date_field": "updated_at",
         },
         priority=0.9,
         protocol="https",

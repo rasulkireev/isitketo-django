@@ -140,3 +140,6 @@ dmypy.json
 
 # Other
 .DS_Store
+
+# Local IndexNow checkpoint
+indexnow-state.json

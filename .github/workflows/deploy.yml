@@ -30,6 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          build-args: DEPLOYMENT_REVISION=${{ github.sha }}
           push: true
           file: deployment/Dockerfile.server
           tags: ghcr.io/${{ github.repository }}

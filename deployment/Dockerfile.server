@@ -10,6 +10,9 @@ RUN npm run build
 # Production stage
 FROM python:3.11
 
+ARG DEPLOYMENT_REVISION=unknown
+ENV DEPLOYMENT_REVISION=$DEPLOYMENT_REVISION
+
 WORKDIR /app
 
 COPY . .
